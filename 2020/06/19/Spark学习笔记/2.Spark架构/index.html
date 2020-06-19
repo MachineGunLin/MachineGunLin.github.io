@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Spark学习笔记/2.Spark架构 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="2.Spark架构Spark遵循主从架构。Spark集群由一个主服务器和多个从服务器组成。 Spark架构依赖于两个抽象：  ​    弹性分布式数据集（RDD） ​    有向无环图（DAG）  弹性分布式数据集（RDD）弹性分布式数据集就是可以存储在工作节点上的内存中的数据项组。  弹性： 失败时恢复数据 分布式： 数据分布在不同的节点之间 数据集： 数据组  有向无环图（DAG）有向无环图对">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spark学习笔记&#x2F;2.Spark架构">
+<meta property="og:url" content="http://yoursite.com/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/2.Spark%E6%9E%B6%E6%9E%84/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="2.Spark架构Spark遵循主从架构。Spark集群由一个主服务器和多个从服务器组成。 Spark架构依赖于两个抽象：  ​    弹性分布式数据集（RDD） ​    有向无环图（DAG）  弹性分布式数据集（RDD）弹性分布式数据集就是可以存储在工作节点上的内存中的数据项组。  弹性： 失败时恢复数据 分布式： 数据分布在不同的节点之间 数据集： 数据组  有向无环图（DAG）有向无环图对">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200611154003.png">
+<meta property="article:published_time" content="2020-06-19T05:47:22.385Z">
+<meta property="article:modified_time" content="2020-06-11T07:52:59.264Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200611154003.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Spark学习笔记/2.Spark架构" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/2.Spark%E6%9E%B6%E6%9E%84/" class="article-date">
+  <time datetime="2020-06-19T05:47:22.385Z" itemprop="datePublished">2020-06-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Spark学习笔记/2.Spark架构
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="2-Spark架构"><a href="#2-Spark架构" class="headerlink" title="2.Spark架构"></a>2.Spark架构</h1><p>Spark遵循主从架构。Spark集群由一个主服务器和多个从服务器组成。</p>
+<p>Spark架构依赖于两个抽象：</p>
+<ol>
+<li>​    弹性分布式数据集（RDD）</li>
+<li>​    有向无环图（DAG）</li>
+</ol>
+<h4 id="弹性分布式数据集（RDD）"><a href="#弹性分布式数据集（RDD）" class="headerlink" title="弹性分布式数据集（RDD）"></a>弹性分布式数据集（RDD）</h4><p>弹性分布式数据集就是可以存储在工作节点上的内存中的数据项组。</p>
+<ul>
+<li>弹性： 失败时恢复数据</li>
+<li>分布式： 数据分布在不同的节点之间</li>
+<li>数据集： 数据组</li>
+</ul>
+<h4 id="有向无环图（DAG）"><a href="#有向无环图（DAG）" class="headerlink" title="有向无环图（DAG）"></a>有向无环图（DAG）</h4><p>有向无环图对数据执行一系列计算。每个节点都是RDD分区，边缘是数据顶部的转换。</p>
+<h3 id="Spark架构图"><a href="#Spark架构图" class="headerlink" title="Spark架构图"></a>Spark架构图</h3><p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200611154003.png" alt="image-20200611153954186"></p>
+<h4 id="驱动程序-Driver-Program"><a href="#驱动程序-Driver-Program" class="headerlink" title="驱动程序 Driver Program"></a>驱动程序 Driver Program</h4><p>驱动程序是一个运行应用程序，由<code>main（）</code>函数创建<code>SparkContext</code>对象的进程。</p>
+<p><code>SparkContext</code>的目的是协调spark应用程序，作为集群上的独立进程集运行。</p>
+<p>要在集群上运行，<code>SparkContext</code>要连接到不同类型的集群管理器，然后执行以下任务：</p>
+<ul>
+<li>在集群的节点上获取执行程序</li>
+<li>将应用程序代码发送给执行程序。应用程序代码可以通过传递给<code>SparkContext</code>的JAR或者Python文件来定义</li>
+<li>最后，<code>SparkContext</code>将任务发送给执行程序以运行</li>
+</ul>
+<h4 id="集群管理器-Cluster-Manager"><a href="#集群管理器-Cluster-Manager" class="headerlink" title="集群管理器 Cluster Manager"></a>集群管理器 Cluster Manager</h4><p>Spark能够在大量集群上运行需要集群管理器，集群管理器的作用就是跨应用程序分配资源。它由各种类型的集群管理器组成，例如：<code>Hadoop Yarn</code>，<code>Apache Mesos</code>和<code>Standalone scheduler</code>。</p>
+<p>这里standalone scheduler是一个独立的Spark集群管理器，便于在一组空机器上安装Spark。</p>
+<h4 id="工作节点-Worker-Node"><a href="#工作节点-Worker-Node" class="headerlink" title="工作节点 Worker Node"></a>工作节点 Worker Node</h4><p>工作节点是从节点。它的作用是在集群中运行应用程序代码。也就是实际上干活的。</p>
+<h4 id="执行程序-Executor"><a href="#执行程序-Executor" class="headerlink" title="执行程序 Executor"></a>执行程序 Executor</h4><ul>
+<li>执行程序是为工作节点上的应用程序启动的进程</li>
+<li>执行程序运行任务并将数据保存在内存或者磁盘存储中</li>
+<li>它将数据读写到外部源</li>
+<li>每个应用程序都包含其执行者(Executor)</li>
+</ul>
+<h4 id="任务-Task"><a href="#任务-Task" class="headerlink" title="任务 Task"></a>任务 Task</h4><p>任务被发送给一个执行程序的工作单位</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/2.Spark%E6%9E%B6%E6%9E%84/" data-id="ckblska6y000dlktqemfegpgo" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/20.%20Spark%20Take%E5%87%BD%E6%95%B0/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Spark学习笔记/20. Spark Take函数
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/19.%20Spark%20First%E5%87%BD%E6%95%B0/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Spark学习笔记/19. Spark First函数</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/9.%20Spark%20Filter%E5%87%BD%E6%95%B0/">Spark学习笔记/9. Spark Filter函数</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/8.%20Spark%20Map%E5%87%BD%E6%95%B0/">Spark学习笔记/8. Spark Map函数</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/7.%20RDD%E5%85%B1%E4%BA%AB%E5%8F%98%E9%87%8F/">Spark学习笔记/7. RDD共享变量</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/6.%20RDD%E6%8C%81%E4%B9%85%E5%8C%96/">Spark学习笔记/6. RDD持久化</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/5.RDD%E6%93%8D%E4%BD%9C/">Spark学习笔记/5.RDD操作</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

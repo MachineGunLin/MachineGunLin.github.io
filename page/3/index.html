@@ -64,10 +64,10 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-2.Spark架构" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-Spark学习笔记/10. Spark Count函数" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2020/06/19/2.Spark%E6%9E%B6%E6%9E%84/" class="article-date">
-  <time datetime="2020-06-19T05:44:02.116Z" itemprop="datePublished">2020-06-19</time>
+    <a href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/10.%20Spark%20Count%E5%87%BD%E6%95%B0/" class="article-date">
+  <time datetime="2020-06-19T05:47:21.429Z" itemprop="datePublished">2020-06-19</time>
 </a>
     
   </div>
@@ -78,7 +78,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2020/06/19/2.Spark%E6%9E%B6%E6%9E%84/">2.Spark架构</a>
+      <a class="article-title" href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/10.%20Spark%20Count%E5%87%BD%E6%95%B0/">Spark学习笔记/10. Spark Count函数</a>
     </h1>
   
 
@@ -86,43 +86,28 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="2-Spark架构"><a href="#2-Spark架构" class="headerlink" title="2.Spark架构"></a>2.Spark架构</h1><p>Spark遵循主从架构。Spark集群由一个主服务器和多个从服务器组成。</p>
-<p>Spark架构依赖于两个抽象：</p>
-<ol>
-<li>​    弹性分布式数据集（RDD）</li>
-<li>​    有向无环图（DAG）</li>
-</ol>
-<h4 id="弹性分布式数据集（RDD）"><a href="#弹性分布式数据集（RDD）" class="headerlink" title="弹性分布式数据集（RDD）"></a>弹性分布式数据集（RDD）</h4><p>弹性分布式数据集就是可以存储在工作节点上的内存中的数据项组。</p>
-<ul>
-<li>弹性： 失败时恢复数据</li>
-<li>分布式： 数据分布在不同的节点之间</li>
-<li>数据集： 数据组</li>
-</ul>
-<h4 id="有向无环图（DAG）"><a href="#有向无环图（DAG）" class="headerlink" title="有向无环图（DAG）"></a>有向无环图（DAG）</h4><p>有向无环图对数据执行一系列计算。每个节点都是RDD分区，边缘是数据顶部的转换。</p>
-<h3 id="Spark架构图"><a href="#Spark架构图" class="headerlink" title="Spark架构图"></a>Spark架构图</h3><p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200611154003.png" alt="image-20200611153954186"></p>
-<h4 id="驱动程序-Driver-Program"><a href="#驱动程序-Driver-Program" class="headerlink" title="驱动程序 Driver Program"></a>驱动程序 Driver Program</h4><p>驱动程序是一个运行应用程序，由<code>main（）</code>函数创建<code>SparkContext</code>对象的进程。</p>
-<p><code>SparkContext</code>的目的是协调spark应用程序，作为集群上的独立进程集运行。</p>
-<p>要在集群上运行，<code>SparkContext</code>要连接到不同类型的集群管理器，然后执行以下任务：</p>
-<ul>
-<li>在集群的节点上获取执行程序</li>
-<li>将应用程序代码发送给执行程序。应用程序代码可以通过传递给<code>SparkContext</code>的JAR或者Python文件来定义</li>
-<li>最后，<code>SparkContext</code>将任务发送给执行程序以运行</li>
-</ul>
-<h4 id="集群管理器-Cluster-Manager"><a href="#集群管理器-Cluster-Manager" class="headerlink" title="集群管理器 Cluster Manager"></a>集群管理器 Cluster Manager</h4><p>Spark能够在大量集群上运行需要集群管理器，集群管理器的作用就是跨应用程序分配资源。它由各种类型的集群管理器组成，例如：<code>Hadoop Yarn</code>，<code>Apache Mesos</code>和<code>Standalone scheduler</code>。</p>
-<p>这里standalone scheduler是一个独立的Spark集群管理器，便于在一组空机器上安装Spark。</p>
-<h4 id="工作节点-Worker-Node"><a href="#工作节点-Worker-Node" class="headerlink" title="工作节点 Worker Node"></a>工作节点 Worker Node</h4><p>工作节点是从节点。它的作用是在集群中运行应用程序代码。也就是实际上干活的。</p>
-<h4 id="执行程序-Executor"><a href="#执行程序-Executor" class="headerlink" title="执行程序 Executor"></a>执行程序 Executor</h4><ul>
-<li>执行程序是为工作节点上的应用程序启动的进程</li>
-<li>执行程序运行任务并将数据保存在内存或者磁盘存储中</li>
-<li>它将数据读写到外部源</li>
-<li>每个应用程序都包含其执行者(Executor)</li>
-</ul>
-<h4 id="任务-Task"><a href="#任务-Task" class="headerlink" title="任务 Task"></a>任务 Task</h4><p>任务被发送给一个执行程序的工作单位</p>
+        <h1 id="10-Spark-Count函数"><a href="#10-Spark-Count函数" class="headerlink" title="10. Spark Count函数"></a>10. Spark Count函数</h1><p>在Spark中，<code>count</code>函数返回数据集中存在的元素数。</p>
+<h4 id="count函数的示例"><a href="#count函数的示例" class="headerlink" title="count函数的示例"></a>count函数的示例</h4><p>在此示例中，计算数据集中存在的元素数量。</p>
+<p>使用并行化集合创建RDD：</p>
+<blockquote>
+<p>scala&gt; val data = sc.parallelize(List(1, 2, 3, 4, 5))</p>
+</blockquote>
+<p>读取生成的结果:</p>
+<blockquote>
+<p>scala&gt; data.collect</p>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612095606.png" alt="image-20200612094233393"></p>
+<p>应用<code>count()</code>函数来计算元素数:</p>
+<blockquote>
+<p>scala&gt; val countfunc = data.count()</p>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612095615.png" alt="image-20200612094321579"></p>
+<p>返回RDD的元素个数：5</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/06/19/2.Spark%E6%9E%B6%E6%9E%84/" data-id="ckblsgie1000bxwtqf3yuax6v" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/10.%20Spark%20Count%E5%87%BD%E6%95%B0/" data-id="ckblska6p0001lktq78b24t4h" class="article-share-link">Share</a>
       
       
     </footer>
@@ -132,10 +117,10 @@
 
 
   
-    <article id="post-1.Spark简介" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-Spark学习笔记/1.Spark简介" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2020/06/19/1.Spark%E7%AE%80%E4%BB%8B/" class="article-date">
-  <time datetime="2020-06-19T05:44:02.036Z" itemprop="datePublished">2020-06-19</time>
+    <a href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/1.Spark%E7%AE%80%E4%BB%8B/" class="article-date">
+  <time datetime="2020-06-19T05:47:21.368Z" itemprop="datePublished">2020-06-19</time>
 </a>
     
   </div>
@@ -146,7 +131,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2020/06/19/1.Spark%E7%AE%80%E4%BB%8B/">1.Spark简介</a>
+      <a class="article-title" href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/1.Spark%E7%AE%80%E4%BB%8B/">Spark学习笔记/1.Spark简介</a>
     </h1>
   
 
@@ -173,7 +158,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/06/19/1.Spark%E7%AE%80%E4%BB%8B/" data-id="ckblsgido0000xwtq774d7lok" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/1.Spark%E7%AE%80%E4%BB%8B/" data-id="ckblska6k0000lktqe3mlbdhm" class="article-share-link">Share</a>
       
       
     </footer>
@@ -268,23 +253,23 @@
       <ul>
         
           <li>
-            <a href="/2020/06/19/22.%20Spark%E5%AD%97%E7%AC%A6%E7%BB%9F%E8%AE%A1%E7%A4%BA%E4%BE%8B/">22. Spark字符统计示例</a>
+            <a href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/9.%20Spark%20Filter%E5%87%BD%E6%95%B0/">Spark学习笔记/9. Spark Filter函数</a>
           </li>
         
           <li>
-            <a href="/2020/06/19/21.%20Spark%E5%8D%95%E8%AF%8D%E7%BB%9F%E8%AE%A1%E7%A4%BA%E4%BE%8B%EF%BC%88word%20count%EF%BC%89/">21. Spark单词统计示例（word count）</a>
+            <a href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/8.%20Spark%20Map%E5%87%BD%E6%95%B0/">Spark学习笔记/8. Spark Map函数</a>
           </li>
         
           <li>
-            <a href="/2020/06/19/20.%20Spark%20Take%E5%87%BD%E6%95%B0/">20. Spark Take函数</a>
+            <a href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/7.%20RDD%E5%85%B1%E4%BA%AB%E5%8F%98%E9%87%8F/">Spark学习笔记/7. RDD共享变量</a>
           </li>
         
           <li>
-            <a href="/2020/06/19/19.%20Spark%20First%E5%87%BD%E6%95%B0/">19. Spark First函数</a>
+            <a href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/6.%20RDD%E6%8C%81%E4%B9%85%E5%8C%96/">Spark学习笔记/6. RDD持久化</a>
           </li>
         
           <li>
-            <a href="/2020/06/19/18.%20Spark%20cogroup%E5%87%BD%E6%95%B0/">18. Spark cogroup函数</a>
+            <a href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/5.RDD%E6%93%8D%E4%BD%9C/">Spark学习笔记/5.RDD操作</a>
           </li>
         
       </ul>

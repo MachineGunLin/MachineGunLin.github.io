@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Spark学习笔记/22. Spark字符统计示例 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="22. Spark字符统计示例在Spark字符统计示例中，将找出指定文件中每个字符的频率。这里使用scala语言来执行spark操作。 执行Spark字符计数示例的步骤写好一个sparkdata.txt:  在hadoop的目录中创建一个目录，保存文本文件：  $ hdfs dfs -mkdir &#x2F;spark   将sparkdata.txt文件上传到特定目录中：  $ hdfs dfs -put">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spark学习笔记&#x2F;22. Spark字符统计示例">
+<meta property="og:url" content="http://yoursite.com/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/22.%20Spark%E5%AD%97%E7%AC%A6%E7%BB%9F%E8%AE%A1%E7%A4%BA%E4%BE%8B/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="22. Spark字符统计示例在Spark字符统计示例中，将找出指定文件中每个字符的频率。这里使用scala语言来执行spark操作。 执行Spark字符计数示例的步骤写好一个sparkdata.txt:  在hadoop的目录中创建一个目录，保存文本文件：  $ hdfs dfs -mkdir &#x2F;spark   将sparkdata.txt文件上传到特定目录中：  $ hdfs dfs -put">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612122541.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612114904.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612115106.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612122530.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612115806.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612121913.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612122053.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612122456.png">
+<meta property="article:published_time" content="2020-06-19T05:47:22.653Z">
+<meta property="article:modified_time" content="2020-06-12T04:26:00.333Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612122541.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Spark学习笔记/22. Spark字符统计示例" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/22.%20Spark%E5%AD%97%E7%AC%A6%E7%BB%9F%E8%AE%A1%E7%A4%BA%E4%BE%8B/" class="article-date">
+  <time datetime="2020-06-19T05:47:22.653Z" itemprop="datePublished">2020-06-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Spark学习笔记/22. Spark字符统计示例
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="22-Spark字符统计示例"><a href="#22-Spark字符统计示例" class="headerlink" title="22. Spark字符统计示例"></a>22. Spark字符统计示例</h1><p>在Spark字符统计示例中，将找出指定文件中每个字符的频率。这里使用scala语言来执行spark操作。</p>
+<h4 id="执行Spark字符计数示例的步骤"><a href="#执行Spark字符计数示例的步骤" class="headerlink" title="执行Spark字符计数示例的步骤"></a>执行Spark字符计数示例的步骤</h4><p>写好一个sparkdata.txt:</p>
+<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612122541.png" alt="image-20200612120827865"></p>
+<p>在hadoop的目录中创建一个目录，保存文本文件：</p>
+<blockquote>
+<p>$ hdfs dfs -mkdir /spark</p>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612114904.png" alt="image-20200612114904720"></p>
+<p>将sparkdata.txt文件上传到特定目录中：</p>
+<blockquote>
+<p>$ hdfs dfs -put /root/sparkdata.txt /spark</p>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612115106.png" alt="image-20200612115106288"></p>
+<p>在scala模式下打开spark:</p>
+<blockquote>
+<p>$ spark-shell</p>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612122530.png" alt="image-20200612120933126"></p>
+<p>创建一个RDD：</p>
+<blockquote>
+<p>scala&gt; val data = sc.textFile(“../../sparkdata.txt”)</p>
+</blockquote>
+<p>这里传递包含数据的文件名。</p>
+<p>读取生成的结果：</p>
+<blockquote>
+<p>scala&gt; data.collect</p>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612115806.png" alt="image-20200612115806248"></p>
+<p>以单个字符的形式拆分现有数据：</p>
+<blockquote>
+<p>scala&gt; val splitdata  = data.flatMap(line =&gt; line.split(“”))</p>
+</blockquote>
+<p>读取生成的结果：</p>
+<blockquote>
+<p>scala&gt; splitdata.collect</p>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612121913.png" alt="image-20200612121913070"></p>
+<p>执行映射操作：</p>
+<blockquote>
+<p>scala&gt; val mapdata = splitdata.map(word =&gt; (word, 1))</p>
+</blockquote>
+<p>这里给每个字符分配了一个值<strong>1</strong>。</p>
+<p>读取生成的结果：</p>
+<blockquote>
+<p>scala&gt; mapdata.collect</p>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612122053.png" alt="image-20200612122052952"></p>
+<p>执行<code>reduce</code>操作：</p>
+<blockquote>
+<p>scala&gt; val reducedata = mapdata.reduceByKey(_+_)</p>
+</blockquote>
+<p>读取生成的结果：</p>
+<blockquote>
+<p>scala&gt; reducedata.collect</p>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612122456.png" alt="image-20200612122456444"></p>
+<p>返回结果是计算所有字符及它们的出现次数。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/22.%20Spark%E5%AD%97%E7%AC%A6%E7%BB%9F%E8%AE%A1%E7%A4%BA%E4%BE%8B/" data-id="ckblska6x000clktq1ljdcop5" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/3.Spark%E7%BB%84%E4%BB%B6/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Spark学习笔记/3.Spark组件
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/21.%20Spark%E5%8D%95%E8%AF%8D%E7%BB%9F%E8%AE%A1%E7%A4%BA%E4%BE%8B%EF%BC%88word%20count%EF%BC%89/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Spark学习笔记/21. Spark单词统计示例（word count）</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/9.%20Spark%20Filter%E5%87%BD%E6%95%B0/">Spark学习笔记/9. Spark Filter函数</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/8.%20Spark%20Map%E5%87%BD%E6%95%B0/">Spark学习笔记/8. Spark Map函数</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/7.%20RDD%E5%85%B1%E4%BA%AB%E5%8F%98%E9%87%8F/">Spark学习笔记/7. RDD共享变量</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/6.%20RDD%E6%8C%81%E4%B9%85%E5%8C%96/">Spark学习笔记/6. RDD持久化</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/5.RDD%E6%93%8D%E4%BD%9C/">Spark学习笔记/5.RDD操作</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>
