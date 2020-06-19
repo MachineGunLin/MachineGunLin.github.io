@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://yoursite.com/page/2/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:locale" content="en_US">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-12. Spark Union函数" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/19/12.%20Spark%20Union%E5%87%BD%E6%95%B0/" class="article-date">
+  <time datetime="2020-06-19T05:44:02.570Z" itemprop="datePublished">2020-06-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/19/12.%20Spark%20Union%E5%87%BD%E6%95%B0/">12. Spark Union函数</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="12-Spark-Union函数"><a href="#12-Spark-Union函数" class="headerlink" title="12. Spark Union函数"></a>12. Spark Union函数</h1><p>在Spark中，<code>Union</code>函数返回一个新数据集，其中包含不同数据集中存在的元素组合（也就是说返回两个数据集的并集）。</p>
+<h4 id="Union函数示例"><a href="#Union函数示例" class="headerlink" title="Union函数示例"></a>Union函数示例</h4><p>在此示例中，组合了两个元素的数据集。</p>
+<p>使用并行化集合创建集合RDD：</p>
+<blockquote>
+<p>scala&gt; val data1 = sc.parallelize(List(1, 2))</p>
+</blockquote>
+<p>读取生成的结果：</p>
+<blockquote>
+<p>scala&gt; data1.collect</p>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612095401.png" alt="image-20200612095229224"></p>
+<p>使用并行化集合创建另一个RDD：</p>
+<blockquote>
+<p>scala&gt; val data2 = sc.parallelize(List(3, 4, 5))</p>
+</blockquote>
+<p>读取生成的结果：</p>
+<blockquote>
+<p>scala&gt; data2.collect</p>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612095351.png" alt="image-20200612095351250"></p>
+<p>应用<code>union()</code>函数返回元素的并集:</p>
+<blockquote>
+<p>scala&gt; val unionfunc = data1.union(data2)</p>
+</blockquote>
+<p>读取生成的结果：</p>
+<blockquote>
+<p>scala&gt; unionfunc.collect</p>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612095525.png" alt="image-20200612095525301"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/19/12.%20Spark%20Union%E5%87%BD%E6%95%B0/" data-id="ckblsgidw0003xwtq247576kp" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-11. Spark Distinct函数" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/19/11.%20Spark%20Distinct%E5%87%BD%E6%95%B0/" class="article-date">
+  <time datetime="2020-06-19T05:44:02.534Z" itemprop="datePublished">2020-06-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/19/11.%20Spark%20Distinct%E5%87%BD%E6%95%B0/">11. Spark Distinct函数</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="11-Spark-Distinct函数"><a href="#11-Spark-Distinct函数" class="headerlink" title="11. Spark Distinct函数"></a>11. Spark Distinct函数</h1><p>在Spark中，<code>Distinct</code>函数返回提供的数据集中的不同元素（相当于数据集全都放入一个set，再返回set中的所有元素）。</p>
+<h4 id="Distinct函数的示例"><a href="#Distinct函数的示例" class="headerlink" title="Distinct函数的示例"></a>Distinct函数的示例</h4><p>使用并行化集合创建RDD：</p>
+<blockquote>
+<p>scala&gt; val data = sc.parallelize(List(10, 20, 20, 40))</p>
+</blockquote>
+<p>读取生成的结果：</p>
+<blockquote>
+<p>scala&gt; data.collect</p>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612095546.png" alt="image-20200612094720307"></p>
+<p>使用<code>distinct()</code>函数来忽略重复的元素：</p>
+<blockquote>
+<p>scala&gt; val distinctfunc = data.distinct()</p>
+</blockquote>
+<p>读取生成的结果：</p>
+<blockquote>
+<p>scala&gt; distinctfunc.collect</p>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612095554.png" alt="image-20200612094841086"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/19/11.%20Spark%20Distinct%E5%87%BD%E6%95%B0/" data-id="ckblsgidv0002xwtq3vw1h9do" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-10. Spark Count函数" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/19/10.%20Spark%20Count%E5%87%BD%E6%95%B0/" class="article-date">
+  <time datetime="2020-06-19T05:44:02.531Z" itemprop="datePublished">2020-06-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/19/10.%20Spark%20Count%E5%87%BD%E6%95%B0/">10. Spark Count函数</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="10-Spark-Count函数"><a href="#10-Spark-Count函数" class="headerlink" title="10. Spark Count函数"></a>10. Spark Count函数</h1><p>在Spark中，<code>count</code>函数返回数据集中存在的元素数。</p>
+<h4 id="count函数的示例"><a href="#count函数的示例" class="headerlink" title="count函数的示例"></a>count函数的示例</h4><p>在此示例中，计算数据集中存在的元素数量。</p>
+<p>使用并行化集合创建RDD：</p>
+<blockquote>
+<p>scala&gt; val data = sc.parallelize(List(1, 2, 3, 4, 5))</p>
+</blockquote>
+<p>读取生成的结果:</p>
+<blockquote>
+<p>scala&gt; data.collect</p>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612095606.png" alt="image-20200612094233393"></p>
+<p>应用<code>count()</code>函数来计算元素数:</p>
+<blockquote>
+<p>scala&gt; val countfunc = data.count()</p>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612095615.png" alt="image-20200612094321579"></p>
+<p>返回RDD的元素个数：5</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/19/10.%20Spark%20Count%E5%87%BD%E6%95%B0/" data-id="ckblsgidw0004xwtqg5xoddw0" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-9. Spark Filter函数" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/19/9.%20Spark%20Filter%E5%87%BD%E6%95%B0/" class="article-date">
+  <time datetime="2020-06-19T05:44:02.511Z" itemprop="datePublished">2020-06-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/19/9.%20Spark%20Filter%E5%87%BD%E6%95%B0/">9. Spark Filter函数</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="9-Spark-Filter函数"><a href="#9-Spark-Filter函数" class="headerlink" title="9. Spark Filter函数"></a>9. Spark Filter函数</h1><p>在Spark中，Filter函数返回一个新数据集，该数据集是通过选择函数返回<code>true</code>的源元素而形成的。因此它仅检索满足给定条件的元素。</p>
+<h4 id="Filter函数示例"><a href="#Filter函数示例" class="headerlink" title="Filter函数示例"></a>Filter函数示例</h4><p>在此示例中，将过滤给定数据并检索<strong>除35之外的所有值</strong>。</p>
+<p>在Scala模式下打开Spark:</p>
+<blockquote>
+<p>$ spark-shell</p>
+</blockquote>
+<p>使用并行化集合创建RDD：</p>
+<blockquote>
+<p>scala&gt; val data = sc.parallelize(List(10, 20, 35, 40))</p>
+</blockquote>
+<p>读取生成的结果：</p>
+<blockquote>
+<p>scala&gt; data.collect</p>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612092833226.png" alt="image-20200612092833226"></p>
+<p>使用过滤器filter函数并传递执行所需的表达式:</p>
+<blockquote>
+<p>scala&gt; val filterfunc = data.filter(x =&gt; x != 35)</p>
+</blockquote>
+<p>读取生成的结果（理论上应该去掉集合中的35）：</p>
+<blockquote>
+<p>scala&gt; filterfunc.collect</p>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612093031124.png" alt="image-20200612093031124"></p>
+<p>确实把集合中的元素35给过滤掉了。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/19/9.%20Spark%20Filter%E5%87%BD%E6%95%B0/" data-id="ckblsgieb000lxwtqe0ksdojq" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-8. Spark Map函数" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/19/8.%20Spark%20Map%E5%87%BD%E6%95%B0/" class="article-date">
+  <time datetime="2020-06-19T05:44:02.451Z" itemprop="datePublished">2020-06-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/19/8.%20Spark%20Map%E5%87%BD%E6%95%B0/">8. Spark Map函数</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="8-Spark-Map函数"><a href="#8-Spark-Map函数" class="headerlink" title="8. Spark Map函数"></a>8. Spark Map函数</h1><p>在Spark中，Map通过函数传递源的每个元素，并形成新的分布式数据集。</p>
+<h4 id="Map函数示例"><a href="#Map函数示例" class="headerlink" title="Map函数示例"></a>Map函数示例</h4><p>为每一个元素添加一个常量值。在Scala模式下打开Spark：</p>
+<blockquote>
+<p>$ spark-shell</p>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612091757.png" alt="image-20200612091716714"></p>
+<p>使用并行化集合创建RDD：</p>
+<blockquote>
+<p>scala&gt; val data = sc.parallelize(List(10, 20, 30))</p>
+</blockquote>
+<p>读取生成的结果：</p>
+<blockquote>
+<p>scala&gt; data.collect</p>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612091941.png" alt="image-20200612091941156"></p>
+<p>应用map函数并传递所需的表达式：</p>
+<blockquote>
+<p>scala: val mapfunc = data.map(x =&gt; x + 10)</p>
+</blockquote>
+<p>读取生成的结果：</p>
+<blockquote>
+<p>scala&gt; mapfunc.collect</p>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612092122.png" alt="image-20200612092122547"></p>
+<p>data集合中的每个元素的值都加了10.</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/19/8.%20Spark%20Map%E5%87%BD%E6%95%B0/" data-id="ckblsgieb000kxwtqge4ch5hq" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-7. RDD共享变量" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/19/7.%20RDD%E5%85%B1%E4%BA%AB%E5%8F%98%E9%87%8F/" class="article-date">
+  <time datetime="2020-06-19T05:44:02.368Z" itemprop="datePublished">2020-06-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/19/7.%20RDD%E5%85%B1%E4%BA%AB%E5%8F%98%E9%87%8F/">7. RDD共享变量</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="7-RDD共享变量"><a href="#7-RDD共享变量" class="headerlink" title="7. RDD共享变量"></a>7. RDD共享变量</h1><p>在Spark中，当任何函数传递给转换操作时，它将会在远程集群节点上运行。它适用于函数中使用的所有变量的不同副本。这些变量将复制到每台计算机，并且远程计算机上的变量更新不会恢复到驱动程序。</p>
+<h4 id="广播变量"><a href="#广播变量" class="headerlink" title="广播变量"></a>广播变量</h4><p>广播变量支持在每台机器上缓存只读变量，而不是提供任务的副本。Spark使用传播算法来分发广播变量以降低通信成本。</p>
+<p>Spark动作的执行经过几个阶段，由分布式<code>shuffle</code>操作分开。Spark自动广播每个阶段中任务所需的公共数据。以这种方式广播的数据以序列化形式缓存并在运行每个任务之前反序列化。</p>
+<p>要创建广播变量（比如<code>v</code>），请调用<code>SparkContext.broadcast(v)</code>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">scala&gt; val v &#x3D; sc.broadcast(Array(1, 2, 3))</span><br><span class="line">scala&gt; v.value</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200611191053.png" alt="image-20200611191053722"></p>
+<h4 id="累加器"><a href="#累加器" class="headerlink" title="累加器"></a>累加器</h4><p>累加器适用于执行关联和交换操作（例如计数器或总和）的变量。</p>
+<p>Spark为数字类型的累加器提供支持，还可以添加对新类型的支持。</p>
+<p>要创建数字累加器，请调用<code>SparkContext.longAccumulator()</code>或<code>SparkContext.doubleAccumulator()</code>以累积<code>long</code>或<code>Double</code>类型的值。</p>
+<p>示例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">scala&gt; val a &#x3D; sc.longAccumulator(&quot;Accumulator&quot;)</span><br><span class="line">scala&gt; sc.parallelize(Array(2, 5)).foreach(x&#x3D;&gt;a.add(x))</span><br><span class="line">scala&gt; a.value</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200611190854.png" alt="image-20200611190853900"></p>
+<p>累加数组元素（2 + 5 = 7）</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/19/7.%20RDD%E5%85%B1%E4%BA%AB%E5%8F%98%E9%87%8F/" data-id="ckblsgiea000jxwtq0gtd8yhw" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-6. RDD持久化" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/19/6.%20RDD%E6%8C%81%E4%B9%85%E5%8C%96/" class="article-date">
+  <time datetime="2020-06-19T05:44:02.295Z" itemprop="datePublished">2020-06-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/19/6.%20RDD%E6%8C%81%E4%B9%85%E5%8C%96/">6. RDD持久化</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="6-RDD持久化"><a href="#6-RDD持久化" class="headerlink" title="6. RDD持久化"></a>6. RDD持久化</h1><p>Spark通过在操作中将数据持久保存在内存中，提供了一种处理数据集的便捷方式。</p>
+<p>在持久化RDD的同时，每个节点都存储它在内存中计算的任何分区，也可以在该数据集的其他任务中重用他们。</p>
+<p>可以使用<code>persist()</code>或<code>cache(0)</code>方法来标记要保留的RDD。Spark的缓存是容错的。在任何情况下，如果RDD的分区丢失，spark将使用最初创建它的<code>转换</code>自动重新计算。</p>
+<p>存在可用于存储持久RDD的不同存储级别。通过将<code>StorageLevel</code>对象（Scala，java，python）传递给<code>persist()</code>来使用这些级别。<code>cache()</code>方法用于默认存储级别，即<code>StorageLevel.MEMORY_ONLY</code>。</p>
+<p>存储级别的集合：</p>
+<table>
+<thead>
+<tr>
+<th align="center">存储级别</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><code>MEMORY_ONLY</code></td>
+<td align="center">将RDD存储为JVM中的反序列化Java对象。这是默认级别。如果RDD不适合内存，则每次需要时都不会缓存和重新计算某些分区。</td>
+</tr>
+<tr>
+<td align="center"><code>MEMORY_ADD_DISK</code></td>
+<td align="center">它将RDD存储为JVM中反序列化Java对象。如果RDD不适合内存，请存储在适合磁盘的分区，并在需要时从磁盘读取它们。</td>
+</tr>
+<tr>
+<td align="center"><code>MEMORY_ONLY_SER</code></td>
+<td align="center">它将RDD存储为序列化Java对象（即每个分区一个字节的数组）。这通常比反序列对象更节省空间。</td>
+</tr>
+<tr>
+<td align="center"><code>MEMORY_ADD_DISK_SER</code></td>
+<td align="center">类似于<code>MEMORY_DISK_SER</code>，但是将内存中不适合的分区溢出到磁盘而不是重新计算它们。</td>
+</tr>
+<tr>
+<td align="center"><code>DISK_ONLY</code></td>
+<td align="center">它仅将RDD分区存储在磁盘上。</td>
+</tr>
+<tr>
+<td align="center"><code>MEMORY_ONLY_2</code>, <code>MEMORY_AND_DISK_2</code></td>
+<td align="center">它与上面的级别相同，但复制两个集群上的每个分区。</td>
+</tr>
+<tr>
+<td align="center"><code>OFF_HEAP</code></td>
+<td align="center">类似于<code>MEMORY_ONLY_SER</code>，但将数据存储在堆外内存中。必须启用堆外内存。</td>
+</tr>
+</tbody></table>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/19/6.%20RDD%E6%8C%81%E4%B9%85%E5%8C%96/" data-id="ckblsgie8000ixwtqcnv19pfo" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-5.RDD操作" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/19/5.RDD%E6%93%8D%E4%BD%9C/" class="article-date">
+  <time datetime="2020-06-19T05:44:02.201Z" itemprop="datePublished">2020-06-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/19/5.RDD%E6%93%8D%E4%BD%9C/">5.RDD操作</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="5-RDD操作"><a href="#5-RDD操作" class="headerlink" title="5.RDD操作"></a>5.RDD操作</h1><p>RDD提供两种类型的操作： </p>
+<ol>
+<li>转换</li>
+<li>行动</li>
+</ol>
+<h4 id="1-转换"><a href="#1-转换" class="headerlink" title="1. 转换"></a>1. 转换</h4><p>在Spark中，转换的作用是从现有数据集创建新数据集。</p>
+<p>转换是惰性的，它们仅在动作需要将结果返回到驱动程序时才计算。</p>
+<p>常用的RDD转换：</p>
+<ul>
+<li><code>map(func)</code> ： 它返回一个新的分布式数据集，该数据集是通过<code>func</code>传递源的每个元素而形成的。</li>
+<li><code>filter(func)</code> ： 它返回一个新数据集，该数据集是通过选择函数<code>func</code>返回<code>true</code>的源元素而形成的。</li>
+<li><code>flatMap(func)</code> ： 这里每个输入项可以映射到零个或多个输出项，因此函数<code>func</code>应该返回序列而不是单个项。</li>
+<li><code>mapPartitions(func)</code> ： 类似于<code>map(func)</code>，但是它是在RDD的每个分区（块）上单独运行，因此当在类型T的RDD上运行时，<code>func</code>必须是<code>Iterator &lt;T&gt; =&gt; Iterator &lt;U&gt;</code>类型。</li>
+<li><code>mapPartitionsWithIndex(func)</code> ： 类似于<code>mapPartitons(func)</code>，它为<code>func</code>提供了一个表示分区索引的整数值，因此当在类型T的RDD上运行时，<code>func</code>必须是类型<code>(Int, Iterator &lt;T&gt;)=&gt; Iterator &lt;U&gt;</code>。</li>
+<li><code>sample(withReplacement, fraction, seed)</code> ： 它使用给定的随机数生成器种子对数据的分数部分进行采样，<code>withReplacement</code>表示有或者没有替换。</li>
+<li><code>union(otherDataset)</code> ： 它返回一个新数据集，其中包含源数据集和参数中元素的并集。</li>
+<li><code>intersection(otherDataset)</code> ： 它返回一个新RDD，其中包含源数据集和参数中的集合元素的交集。</li>
+<li><code>distinct([numPartitions]))</code> ： 它返回一个新数据集，其中包含源数据集的不同元素。</li>
+<li><code>groupByKey([numPartitions])</code> ：当在<code>(K, V)</code>对的数据集上调用时，它返回<code>(K, Iterable)</code>对的数据集。</li>
+<li><code>reduceByKey(func, [numPartitions])</code> ： 当调用<code>(K, V)</code>对的数据集时，返回<code>(K, V)</code>对的数据集，其中使用给定的<code>reduce</code>函数<code>func</code>聚合每个键的值，该函数类型必须是<code>(V, V)=&gt;V</code>。</li>
+<li><code>aggregateByKey(zeroValue)(seqOp, combOp, [numPartitions])</code>  ： 当调用<code>(K, V)</code>对的数据集时，返回<code>(K, V)</code>对的数据集，其中使用给定的组合函数和中性”零“值聚合每个键的值。</li>
+<li><code>sortByKey([ascending], [numPartitions])</code> ： 它返回按键值升序或降序排序的键值对的数据集，如在布尔<code>ascending</code>参数中指定。</li>
+<li><code>join(otherDataset, [numPartitions])</code> ： 当调用类型<code>(K, V)</code>和<code>(K, W)</code>的数据集时，返回<code>(K, (V, W))</code>对的数据集以及每个键的所有元素对。通过<code>leftOuterJoin</code>，<code>rightOuterJoin</code>和<code>fullOuterJoin</code>支持外连接。</li>
+<li><code>cogroup(otherDataset, [numPartitions])</code> ： 当调用类型<code>(K, V)</code>和<code>(K, W)</code>的数据集时，返回<code>(K, (Iterable, Iterable))</code>元祖的数据集。此操作也成为<code>groupWith</code>。</li>
+<li><code>cartersian(otherDataset)</code> ： 当调用类型为T和U的数据集时，返回<code>(T, U)</code>对的数据集（所有元素对）。</li>
+<li><code>pipe(command, [envVars])</code> ： 通过shell命令管道RDD的每个分区，例如一个perl或bash脚本。</li>
+<li><code>coalesce(numPartitions)</code> ： 它将RDD中的分区数减少到<code>numPartitions</code>。</li>
+<li><code>repartition(numPartitions)</code> ： 它随机重新调整RDD中的数据，以创建更多或更少的分区，并在它们之间进行平衡。</li>
+<li><code>repartitionAndSortWithinPartitions(partitioner)</code> ： 它根据给定的分区器对RDD进行重新分区，并在每个生成的分区中的键值对记录进行排序。</li>
+</ul>
+<h4 id="2-操作"><a href="#2-操作" class="headerlink" title="2. 操作"></a>2. 操作</h4><p>在Spark中，操作的作用是在对数据集运行计算后将值返回给驱动程序。</p>
+<p>常用的RDD操作：</p>
+<table>
+<thead>
+<tr>
+<th align="center">操作</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><code>reduce(func)</code></td>
+<td align="center">它使用函数func(它接受两个参数并返回一个)来聚合数据集的元素。该函数应该是可交换的和可关联的，以便可以并行正确计算。</td>
+</tr>
+<tr>
+<td align="center"><code>collect()</code></td>
+<td align="center">它将数据集的所有元素作为数组返回到驱动程序中。在过滤器或其他返回足够小的数据子集的操作之后，这通常很有用。</td>
+</tr>
+<tr>
+<td align="center"><code>count(func)</code></td>
+<td align="center">返回数据集中的元素个数。</td>
+</tr>
+<tr>
+<td align="center"><code>first()</code></td>
+<td align="center">返回数据集的第一个元素（类似于<code>take(1)</code>）。</td>
+</tr>
+<tr>
+<td align="center"><code>take(n)</code></td>
+<td align="center">返回一个包含数据集的前n个元素的数组。</td>
+</tr>
+<tr>
+<td align="center"><code>takeSample(withReplcament, num, [seed])</code></td>
+<td align="center">返回一个数组，其中包含数据集的num个元素的随机样本，withReplacement表示有或者没有替换，seed是可选的，可以预先指定随机数生成器种子。</td>
+</tr>
+<tr>
+<td align="center"><code>takeOrdered(n, [ordering])</code></td>
+<td align="center">它使用自然顺序或自定义比较器[ordering]返回RDD的前n个元素。</td>
+</tr>
+<tr>
+<td align="center"><code>saveAsTextFile(path)</code></td>
+<td align="center">用于将数据集的元素作为文本文件（或文本文件集）写入本地文件系统，HDFS或任何其他Hadoop支持的文件系统的给定目录中。</td>
+</tr>
+<tr>
+<td align="center"><code>saveAsSequenceFile(path)</code></td>
+<td align="center">它用于在本地文件系统，HDFS或任何其他Hadoop支持的文件系统中的给定路径中将数据集的元素编写为Hadoop SequenceFile。</td>
+</tr>
+<tr>
+<td align="center"><code>saveAsObjectFile(path)</code></td>
+<td align="center">它用于使用java序列化以简单格式编写数据集的元素，然后可以使用<code>SparkContext.objectFile()</code>加载。</td>
+</tr>
+<tr>
+<td align="center"><code>countByKey()</code></td>
+<td align="center">它仅适用于类型(K, V)的RDD。因此它返回（K, Int）对的散列映射与每个键的计数。</td>
+</tr>
+<tr>
+<td align="center"><code>foreach(func)</code></td>
+<td align="center">它在数据集的每个元素上运行函数<code>func</code>以获得副作用，例如更新累加器或与外部存储系统交互。</td>
+</tr>
+</tbody></table>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/19/5.RDD%E6%93%8D%E4%BD%9C/" data-id="ckblsgie5000hxwtq9v5zd4qu" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-4.弹性分布式数据集（RDD）简介" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/19/4.%E5%BC%B9%E6%80%A7%E5%88%86%E5%B8%83%E5%BC%8F%E6%95%B0%E6%8D%AE%E9%9B%86%EF%BC%88RDD%EF%BC%89%E7%AE%80%E4%BB%8B/" class="article-date">
+  <time datetime="2020-06-19T05:44:02.165Z" itemprop="datePublished">2020-06-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/19/4.%E5%BC%B9%E6%80%A7%E5%88%86%E5%B8%83%E5%BC%8F%E6%95%B0%E6%8D%AE%E9%9B%86%EF%BC%88RDD%EF%BC%89%E7%AE%80%E4%BB%8B/">4.弹性分布式数据集（RDD）简介</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="4-弹性分布式数据集（RDD）简介"><a href="#4-弹性分布式数据集（RDD）简介" class="headerlink" title="4.弹性分布式数据集（RDD）简介"></a>4.弹性分布式数据集（RDD）简介</h1><p><strong><em>弹性分布式数据集（RDD）是Spark的核心抽象之一。它是一组元素，在集群的节点之间进行分区，以便我们可以对其执行各种并行操作。</em></strong></p>
+<p>创建RDD有两种方法：</p>
+<ol>
+<li>并行化驱动程序中的现有数据。</li>
+<li>引用外部存储系统中的数据集。例如：共享文件系统、HDFS、HBASE或者提供Hadoop InputFormat的数据源。</li>
+</ol>
+<h4 id="1-并行化集合"><a href="#1-并行化集合" class="headerlink" title="1.并行化集合"></a>1.并行化集合</h4><p>要创建并行化集合，在驱动程序的现有集合上调用<code>SparkContext</code>的<code>parallelize</code>方法。</p>
+<p>复制集合中的每个元素以形成可并行操作的分布式数据集。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">var info &#x3D; Array(1, 2, 3, 4)</span><br><span class="line">var distinfo &#x3D; sc.parallelize(info)</span><br></pre></td></tr></table></figure>
+
+<p>现在，可以操作分布式数据集distinfo，例如<code>distinfo.reduce((a, b) =&gt; a + b)</code></p>
+<h4 id="2-外部数据集"><a href="#2-外部数据集" class="headerlink" title="2.外部数据集"></a>2.外部数据集</h4><p>在Spark中，可以从Hadoop支持的任何类型的存储源（如HDFS，Cassandra, HBase甚至本地文件系统）创建分布式数据集。Spark提供对文本文件，<code>SqeuenceFiles</code>和其他类型的Hadoop InputFormat的支持。</p>
+<p><code>SparkContext</code>的<code>textFile</code>方法可用于创建RDD的文本文件。此方法获取文件的URL（计算机上的本地路径或<code>hdfs://</code>)并读取文件的数据。</p>
+<p>可以通过数据集来操作数据。例如使用<code>map</code>和<code>reduceoperations</code>来添加所有行的大小：<code>data.map(s =&gt; s.length).reduce((a, b) =&gt; a + b)</code></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/19/4.%E5%BC%B9%E6%80%A7%E5%88%86%E5%B8%83%E5%BC%8F%E6%95%B0%E6%8D%AE%E9%9B%86%EF%BC%88RDD%EF%BC%89%E7%AE%80%E4%BB%8B/" data-id="ckblsgie3000exwtqh9zm0btb" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-3.Spark组件" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/19/3.Spark%E7%BB%84%E4%BB%B6/" class="article-date">
+  <time datetime="2020-06-19T05:44:02.138Z" itemprop="datePublished">2020-06-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/19/3.Spark%E7%BB%84%E4%BB%B6/">3.Spark组件</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="3-Spark组件"><a href="#3-Spark组件" class="headerlink" title="3.Spark组件"></a>3.Spark组件</h1><p>Spark是一个计算引擎，可以组织、分发和监控多个应用程序。Spark由不同类型的组件组成：</p>
+<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200611160912.png" alt="image-20200611155359323"></p>
+<h4 id="Spark-Core"><a href="#Spark-Core" class="headerlink" title="Spark Core"></a>Spark Core</h4><p>Spark Core是Spark的核心，执行spark的核心功能。</p>
+<p>Spark Core包含用于任务调度，故障恢复，存储系统和内存管理交互的组件。</p>
+<h4 id="Spark-SQL"><a href="#Spark-SQL" class="headerlink" title="Spark SQL"></a>Spark SQL</h4><ul>
+<li>Spark SQL构建于Spark Core之上，它为结构化数据（structured data）提供支持。</li>
+<li>Spark SQL允许通过SQL以及SQL的Apache Hive变体HQL（Hive查询语言）查询数据。</li>
+<li>它支持JDBC和ODBC连接，这些连接建立java对象与现有数据库，数据仓库和商业智能工具之间的关系。</li>
+<li>它还支持各种数据源，如Hive表，Parquet和JSON。</li>
+</ul>
+<h4 id="Spark-Streaming"><a href="#Spark-Streaming" class="headerlink" title="Spark Streaming"></a>Spark Streaming</h4><ul>
+<li>支持流数据的可伸缩和容错处理。</li>
+<li>它使用Spark Core的快速调度功能来执行流分析。</li>
+<li>它接受小批量数据并对数据执行RDD转换。</li>
+<li>Spark Streaming的设计确保为流数据编写的应用程序可以重复使用，只需要很少的修改即可分析批量的历史数据。</li>
+<li>Web服务器生成的日志文件可以视为数据流的实时示例。</li>
+</ul>
+<h4 id="MLlib"><a href="#MLlib" class="headerlink" title="MLlib"></a>MLlib</h4><p>MLlib是一个包含各种机器学习算法的机器学习库。它包含相关性和假设检验、分类和回归、聚类和主成分分析等。它比Apache Mahout使用的基于磁盘的实现快9倍。</p>
+<h4 id="GraphX"><a href="#GraphX" class="headerlink" title="GraphX"></a>GraphX</h4><p>GraphX是一个用于操作图形和执行图形并行计算的库。它可以创建一个有向图，每个顶点和边可以附加任意属性。</p>
+<p>要操纵图形，它支持各种基本运算符，如子图、连接顶点和聚合消息。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/19/3.Spark%E7%BB%84%E4%BB%B6/" data-id="ckblsgie3000dxwtqbca65wnv" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+
+
+  <nav id="page-nav">
+    
+    <a class="extend prev" rel="prev" href="/">&amp;laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/">Next &amp;raquo;</a>
+  </nav>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/06/19/22.%20Spark%E5%AD%97%E7%AC%A6%E7%BB%9F%E8%AE%A1%E7%A4%BA%E4%BE%8B/">22. Spark字符统计示例</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/19/21.%20Spark%E5%8D%95%E8%AF%8D%E7%BB%9F%E8%AE%A1%E7%A4%BA%E4%BE%8B%EF%BC%88word%20count%EF%BC%89/">21. Spark单词统计示例（word count）</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/19/20.%20Spark%20Take%E5%87%BD%E6%95%B0/">20. Spark Take函数</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/19/19.%20Spark%20First%E5%87%BD%E6%95%B0/">19. Spark First函数</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/19/18.%20Spark%20cogroup%E5%87%BD%E6%95%B0/">18. Spark cogroup函数</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>
