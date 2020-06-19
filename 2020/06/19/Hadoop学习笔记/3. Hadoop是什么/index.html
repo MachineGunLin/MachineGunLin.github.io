@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Hadoop学习笔记/3. Hadoop是什么 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="3. Hadoop是什么Hadoop是使用Java编写的、允许分布在集群、使用简单的编程模型的计算机处理大型数据集的Apache开源框架。 Hadoop框架应用了工程提供的跨计算机集群的分布式存储和计算的环境，是专为从单一服务器扩展到上千台服务器、让每个机器都可以提供本地计算和存储的框架。 Hadoop的架构在其核心，Hadoop主要有两个层次，即：  加工&#x2F;计算层（MapReduce） 存储层（">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hadoop学习笔记&#x2F;3. Hadoop是什么">
+<meta property="og:url" content="http://yoursite.com/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/3.%20Hadoop%E6%98%AF%E4%BB%80%E4%B9%88/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="3. Hadoop是什么Hadoop是使用Java编写的、允许分布在集群、使用简单的编程模型的计算机处理大型数据集的Apache开源框架。 Hadoop框架应用了工程提供的跨计算机集群的分布式存储和计算的环境，是专为从单一服务器扩展到上千台服务器、让每个机器都可以提供本地计算和存储的框架。 Hadoop的架构在其核心，Hadoop主要有两个层次，即：  加工&#x2F;计算层（MapReduce） 存储层（">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200615110250.png">
+<meta property="article:published_time" content="2020-06-19T05:50:36.512Z">
+<meta property="article:modified_time" content="2020-06-15T03:29:33.281Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200615110250.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Hadoop学习笔记/3. Hadoop是什么" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/3.%20Hadoop%E6%98%AF%E4%BB%80%E4%B9%88/" class="article-date">
+  <time datetime="2020-06-19T05:50:36.512Z" itemprop="datePublished">2020-06-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Hadoop学习笔记/3. Hadoop是什么
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="3-Hadoop是什么"><a href="#3-Hadoop是什么" class="headerlink" title="3. Hadoop是什么"></a>3. Hadoop是什么</h1><p>Hadoop是使用Java编写的、允许分布在集群、使用简单的编程模型的计算机处理大型数据集的Apache开源框架。</p>
+<p>Hadoop框架应用了工程提供的跨计算机集群的分布式存储和计算的环境，是专为从单一服务器扩展到上千台服务器、让每个机器都可以提供本地计算和存储的框架。</p>
+<h4 id="Hadoop的架构"><a href="#Hadoop的架构" class="headerlink" title="Hadoop的架构"></a>Hadoop的架构</h4><p>在其核心，Hadoop主要有两个层次，即：</p>
+<ul>
+<li>加工/计算层（MapReduce）</li>
+<li>存储层（Hadoop分布式文件系统）</li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200615110250.png" alt="image-20200615110250391"></p>
+<h4 id="MapReduce"><a href="#MapReduce" class="headerlink" title="MapReduce"></a>MapReduce</h4><p>MapReduce是一种并行编程模型，用于编写普通硬件的设计，谷歌对大量数据的高效处理（多TB数据集）的分布式应用在大型集群（数千个节点）以及可靠的容错方式。</p>
+<p>MapReduce程序可在Apache的开源框架Hadoop上运行。</p>
+<h4 id="Hadoop分布式文件系统"><a href="#Hadoop分布式文件系统" class="headerlink" title="Hadoop分布式文件系统"></a>Hadoop分布式文件系统</h4><p>Hadoop分布式文件系统（HDFS）基于谷歌文件系统（GFS），并提供了一个设计在普通硬件上运行的分布式文件系统。它与现有的分布式文件系统有许多相似之处。它高度容错并设计成部署在低成本的硬件上。</p>
+<p>HDFS提供了高吞吐量的应用数据访问，并适用于具有大数据集的应用程序。</p>
+<p>除了上面提到的两个核心组件，Hadoop框架还包括以下两个模块：</p>
+<ul>
+<li>Hadoop通用工具(Common Utilities）：Java库和其他的Hadoop组件所需要的实用工具。</li>
+<li>Hadoop YARN：这是作业调度和集群资源管理的框架。</li>
+</ul>
+<h4 id="Hadoop如何工作？"><a href="#Hadoop如何工作？" class="headerlink" title="Hadoop如何工作？"></a>Hadoop如何工作？</h4><p>建立重新配置、处理大规模数据的服务器是相当昂贵的。</p>
+<p>作为替代，可以联系许多采用单CPU的普通电脑在一起，作为一个单一功能的分布式系统。</p>
+<p>实际上，集群的机器可以并行地获取数据集，并提供一个高得多的吞吐量。此外，这样比一个高端服务器的价格更便宜，因此使用Hadoop跨集群在低成本上的机器上运行是一个不错的选择。</p>
+<p>Hadoop运行整个计算机集群的代码。这个过程包括以下核心任务由Hadoop执行：</p>
+<ul>
+<li>数据最初分为目录和文件。文件分为64M和128M（最好用128M）统一大小块。</li>
+<li>然后这些文件被分布在不同的集群节点，以便进一步处理。</li>
+<li>HDFS在本地文件系统的顶端监督处理。</li>
+<li>块复制处理硬件故障。</li>
+<li>检查代码是否已成功执行。</li>
+<li>执行发生映射之间，减少阶段的排序。</li>
+<li>发送排序的数据到某一个计算机。</li>
+<li>为每个作业编写调试日志。</li>
+</ul>
+<h4 id="Hadoop的优势"><a href="#Hadoop的优势" class="headerlink" title="Hadoop的优势"></a>Hadoop的优势</h4><ul>
+<li>Hadoop框架允许用户快速编写和测试分布式系统。有效地在整个集群上自动分配数据和工作，充分利用CPU内核的基本并行度。</li>
+<li>Hadoop不依赖硬件，提供容错和高可用性（fault tolerance and high availability, FTHA），Hadoop库本身已被设计在应用层，可以检测和处理故障。</li>
+<li>服务器可以添加或从集群动态删除，Hadoop可继续不中断地运行。</li>
+<li>Hadoop是开源的的，它基于Java并兼容所有的平台。</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/3.%20Hadoop%E6%98%AF%E4%BB%80%E4%B9%88/" data-id="ckblsod4o0002m4tq9jxk7t71" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/4.%20Hadoop%20HDFS/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Hadoop学习笔记/4. Hadoop HDFS
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/2.%20Hadoop%E5%A4%A7%E6%95%B0%E6%8D%AE%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Hadoop学习笔记/2. Hadoop大数据解决方案</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/7.%20Hadoop%20MapReduce/">Hadoop学习笔记/7. Hadoop MapReduce</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/6.%20Hadoop%E5%91%BD%E4%BB%A4%E5%8F%82%E8%80%83/">Hadoop学习笔记/6. Hadoop命令参考</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/5.%20Hadoop%20HDFS%E6%93%8D%E4%BD%9C/">Hadoop学习笔记/5. Hadoop HDFS操作</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/4.%20Hadoop%20HDFS/">Hadoop学习笔记/4. Hadoop HDFS</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/3.%20Hadoop%E6%98%AF%E4%BB%80%E4%B9%88/">Hadoop学习笔记/3. Hadoop是什么</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

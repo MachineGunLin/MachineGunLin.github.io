@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Hadoop学习笔记/4. Hadoop HDFS | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="4. Hadoop HDFSHadoop文件系统使用分布式文件系统设计开发。不像其他的分布式系统，它运行在普通硬件。 HDFS是高度容错以及使用低成本的硬件设计的文件系统。 HDFS拥有超大型的数据量，并提供了更轻松的访问。为了存储这些庞大的数据，这些文件都存储在多台机器上。这些文件的存储是以冗余的方式来保护系统在发生故障时免受可能的数据丢失。HDFS也可以并行处理应用程序。 HDFS的特点 它适">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hadoop学习笔记&#x2F;4. Hadoop HDFS">
+<meta property="og:url" content="http://yoursite.com/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/4.%20Hadoop%20HDFS/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="4. Hadoop HDFSHadoop文件系统使用分布式文件系统设计开发。不像其他的分布式系统，它运行在普通硬件。 HDFS是高度容错以及使用低成本的硬件设计的文件系统。 HDFS拥有超大型的数据量，并提供了更轻松的访问。为了存储这些庞大的数据，这些文件都存储在多台机器上。这些文件的存储是以冗余的方式来保护系统在发生故障时免受可能的数据丢失。HDFS也可以并行处理应用程序。 HDFS的特点 它适">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200615113835.png">
+<meta property="article:published_time" content="2020-06-19T05:50:36.516Z">
+<meta property="article:modified_time" content="2020-06-15T04:41:30.712Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200615113835.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Hadoop学习笔记/4. Hadoop HDFS" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/4.%20Hadoop%20HDFS/" class="article-date">
+  <time datetime="2020-06-19T05:50:36.516Z" itemprop="datePublished">2020-06-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Hadoop学习笔记/4. Hadoop HDFS
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="4-Hadoop-HDFS"><a href="#4-Hadoop-HDFS" class="headerlink" title="4. Hadoop HDFS"></a>4. Hadoop HDFS</h1><p>Hadoop文件系统使用分布式文件系统设计开发。不像其他的分布式系统，它运行在普通硬件。</p>
+<p>HDFS是高度容错以及使用低成本的硬件设计的文件系统。</p>
+<p>HDFS拥有超大型的数据量，并提供了更轻松的访问。为了存储这些庞大的数据，这些文件都存储在多台机器上。这些文件的存储是以冗余的方式来保护系统在发生故障时免受可能的数据丢失。HDFS也可以并行处理应用程序。</p>
+<h4 id="HDFS的特点"><a href="#HDFS的特点" class="headerlink" title="HDFS的特点"></a>HDFS的特点</h4><ul>
+<li>它适用于分布式存储和处理。</li>
+<li>Hadoop提供的命令接口与HDFS进行交互。</li>
+<li>名称节点（namenode）和数据节点（datanode）帮助用户通过内置的服务器轻松检查集群的状态。</li>
+<li>流式访问文件系统数据。</li>
+<li>HDFS提供了文件的权限和验证。</li>
+</ul>
+<h4 id="HDFS架构"><a href="#HDFS架构" class="headerlink" title="HDFS架构"></a>HDFS架构</h4><p>Hadoop文件系统的体系结构如图：</p>
+<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200615113835.png" alt="image-20200615113835324"></p>
+<p>HDFS遵循主从架构，它具有以下元素：</p>
+<h5 id="名称节点-Namenode"><a href="#名称节点-Namenode" class="headerlink" title="名称节点 - Namenode"></a>名称节点 - Namenode</h5><p>名称节点是包含GNU/Linux操作系统和软件名称节点的普通硬件。它是一个可以在商业硬件上运行的软件。</p>
+<p>具有名称节点的系统作为主服务器。它执行以下任务：</p>
+<ul>
+<li>管理文件系统命名空间。</li>
+<li>规范客户端对文件的访问。</li>
+<li>它也执行文件系统操作。如重命名，关闭和打开文件和目录。</li>
+</ul>
+<h5 id="数据节点-Datanode"><a href="#数据节点-Datanode" class="headerlink" title="数据节点 - Datanode"></a>数据节点 - Datanode</h5><p>Datanode是具有GNU/Linux操作系统和软件Datanode的普通硬件。对于集群中的每个节点（普通硬件/系统），有一个数据节点。这些节点管理数据并存储在它们的系统。</p>
+<ul>
+<li>数据节点上的文件系统根据用户请求执行读写操作。</li>
+<li>还可以根据名称节点的指令执行操作，如块的创建，删除和复制。</li>
+</ul>
+<h4 id="块"><a href="#块" class="headerlink" title="块"></a>块</h4><p>一般用户数据存储在HDFS文件系统。</p>
+<p>在一个文件系统中的文件被划分为一个或多个段和/或存储在个人数据的节点。这些文件段被称为块。</p>
+<p>也就是说数据的HDFS可以读取或写入的最小量被称为一个块。缺省的块大小为64MB，这可以按需根据HDFS配置来改变。</p>
+<h4 id="HDFS的目标"><a href="#HDFS的目标" class="headerlink" title="HDFS的目标"></a>HDFS的目标</h4><ul>
+<li>故障检测和恢复：由于HDFS包括大量的普通硬件，部件故障频繁。因此HDFS应该具有快速和自动的故障检测和恢复机制。</li>
+<li>巨大的数据集：HDFS有数百个集群节点来管理其庞大的数据集的应用程序。</li>
+<li>数据硬件：请求的任务当计算发生不久后可以高效的完成。HDFS涉及到巨大的数据集，它需要减少网络通信量，增加吞吐量。</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/4.%20Hadoop%20HDFS/" data-id="ckblsod4o0003m4tq8yi709mp" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/5.%20Hadoop%20HDFS%E6%93%8D%E4%BD%9C/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Hadoop学习笔记/5. Hadoop HDFS操作
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/3.%20Hadoop%E6%98%AF%E4%BB%80%E4%B9%88/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Hadoop学习笔记/3. Hadoop是什么</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/7.%20Hadoop%20MapReduce/">Hadoop学习笔记/7. Hadoop MapReduce</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/6.%20Hadoop%E5%91%BD%E4%BB%A4%E5%8F%82%E8%80%83/">Hadoop学习笔记/6. Hadoop命令参考</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/5.%20Hadoop%20HDFS%E6%93%8D%E4%BD%9C/">Hadoop学习笔记/5. Hadoop HDFS操作</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/4.%20Hadoop%20HDFS/">Hadoop学习笔记/4. Hadoop HDFS</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/3.%20Hadoop%E6%98%AF%E4%BB%80%E4%B9%88/">Hadoop学习笔记/3. Hadoop是什么</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

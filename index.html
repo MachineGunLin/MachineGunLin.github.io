@@ -64,6 +64,799 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Hadoop学习笔记/7. Hadoop MapReduce" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/7.%20Hadoop%20MapReduce/" class="article-date">
+  <time datetime="2020-06-19T05:50:36.545Z" itemprop="datePublished">2020-06-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/7.%20Hadoop%20MapReduce/">Hadoop学习笔记/7. Hadoop MapReduce</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="7-Hadoop-MapReduce"><a href="#7-Hadoop-MapReduce" class="headerlink" title="7. Hadoop MapReduce"></a>7. Hadoop MapReduce</h1><p>MapReduce是一个可以在普通硬件的大集群上编写应用程序以并行、可靠的方式处理海量数据的框架。</p>
+<h4 id="MapReduce是什么？"><a href="#MapReduce是什么？" class="headerlink" title="MapReduce是什么？"></a>MapReduce是什么？</h4><p>MapReduce是一种处理技术和程序模型的基于Java的分布式计算框架。</p>
+<p>MapReduce算法包含了两项重要任务，即Map和Reduce。</p>
+<p>Map采用了一组数据并将其转换成另一组数据，其中各个元件被分解成元祖（键/值对）。其次，减少任务，这需要从Map作为输入并组合那些数据元组成的一组小的元祖输出。</p>
+<p>在Map作业之后执行reduce任务。</p>
+<p>MapReduce的主要优点是，它很容易在多个计算节点处理大规模数据。下面的MapReduce模型中数据处理的原语被称为映射器和减速器。分解数据处理应用到映射器和减速器没什么大不了的，但要编写MapReduce形式的应用，扩展应用程序运行在几百，几千甚至几万集群中而仅仅通过一个配置的更改这种简单的可扩展性才是吸引众多程序员使用MR模型的原因。</p>
+<h4 id="算法"><a href="#算法" class="headerlink" title="算法"></a>算法</h4><p>通常MapReduce范例是基于发送数据的计算机的位置。</p>
+<p>MapReduce计划分三个阶段执行，即映射阶段(map), shuffle阶段，减少阶段(reduce)。</p>
+<ul>
+<li>映射阶段：映射或映射器的工作是处理输入数据。一般输入数据是文件或目录的形式，并且被存储在Hadoop的文件系统（HDFS）。输入文件被传递到有限的映射器，映射器处理该数据，并创建数据的若干小块。</li>
+<li>减少阶段：这个阶段是Shuffle阶段和Reduce阶段的组合。减速器的工作是处理来自映射器中的数据。处理之后，它产生一组新的输出，存储在HDFS。</li>
+</ul>
+<p>在一个MapReduce工作中，Hadoop发送Map和Reduce任务到集群的相应服务器。</p>
+<p>框架管理数据传递，例如发出任务的所有节点之间的集群周围的详细信息，验证任务完成和复制数据。</p>
+<p>大部分的计算发生在本地磁盘上，可以减少网络通信量。</p>
+<p>给定任务完成后，将收集集群并减少数据，以形成一个合适的结果，并且将其发送回Hadoop服务器。</p>
+<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200615153527.png" alt="image-20200615141043783"></p>
+<h4 id="输入和输出（Java透视图）"><a href="#输入和输出（Java透视图）" class="headerlink" title="输入和输出（Java透视图）"></a>输入和输出（Java透视图）</h4><p>MapReduce框架上对&lt;key, value&gt;对进行操作，也就是说框架视图中输入需要一组&lt;key, value&lt;对，并产生一组&lt;key, value&gt;对作为作业的输出。</p>
+<p>需要实现接口。键类必须实现可写，可比（较）接口，以方便框架排序。</p>
+<p>MapReduce工作的输入和输出类型：</p>
+<p>（输入）&lt;k1, v1&gt; -&gt; 映射 -&gt; &lt;k2, v2&gt; -&gt; reduce -&gt; &lt;k3, v3&gt;（输出）</p>
+<table>
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center">输入</th>
+<th align="center">输出</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Map</td>
+<td align="center">&lt;k1, v1&gt;</td>
+<td align="center">list(&lt;k2, v2&gt;)</td>
+</tr>
+<tr>
+<td align="center">Reduce</td>
+<td align="center">&lt;k2, list(v2)&gt;</td>
+<td align="center">list(&lt;k3, v3&gt;)</td>
+</tr>
+</tbody></table>
+<h4 id="术语"><a href="#术语" class="headerlink" title="术语"></a>术语</h4><ul>
+<li>PayLoad：应用程序实现映射和减少功能，形成工作的核心。</li>
+<li>Mapper：映射器的输入键/值对映射到一组中间键/值对。</li>
+<li>NameNode：节点管理Hadoop分布式文件系统（HDFS）。</li>
+<li>DataNode：在任何处理发生之前呈现节点数据。</li>
+<li>MasterNode：节点所在JobTracker运行并接受来自客户端作业请求。</li>
+<li>SlaveNode：节点所在Map和Reduce程序运行在slave节点。</li>
+<li>JobTracker：调度作业并跟踪作业分配给任务跟踪器。</li>
+<li>Task Tracker：跟踪任务和报告状态的JobTracker。</li>
+<li>Job：程序在整个数据集映射和减速的执行。</li>
+<li>Task：一个映射程序的执行或对数据的一个片段的减速器。</li>
+<li>Task Attempt：一种特定实例在SlaveNode执行任务的尝试。</li>
+</ul>
+<h4 id="重要命令"><a href="#重要命令" class="headerlink" title="重要命令"></a>重要命令</h4><p>所有的Hadoop命令都是由$HADOOP_HOME/bin/hadoop命令调用。</p>
+<p>Usage: hadoop [–config confdir] COMMAND</p>
+<p>下面列出了可用的选项以及说明。</p>
+<table>
+<thead>
+<tr>
+<th align="center">操作</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">namenode -format</td>
+<td align="center">格式化DFS文件系统。</td>
+</tr>
+<tr>
+<td align="center">secondarynamenode</td>
+<td align="center">运行DFS二次名称文件。</td>
+</tr>
+<tr>
+<td align="center">namenode</td>
+<td align="center">运行DFS名称节点。</td>
+</tr>
+<tr>
+<td align="center">datanode</td>
+<td align="center">运行DFS的Datanode。</td>
+</tr>
+<tr>
+<td align="center">dfsadmin</td>
+<td align="center">运行DFS管理客户端。</td>
+</tr>
+<tr>
+<td align="center">mradmin</td>
+<td align="center">运行映射，减少管理客户端。</td>
+</tr>
+<tr>
+<td align="center">fsck</td>
+<td align="center">运行DFS文件系统检查工具。</td>
+</tr>
+<tr>
+<td align="center">fs</td>
+<td align="center">运行一个通用的文件系统的用户客户端。</td>
+</tr>
+<tr>
+<td align="center">balancer</td>
+<td align="center">运行集群平衡工具。</td>
+</tr>
+<tr>
+<td align="center">oiv</td>
+<td align="center">适用于离线Fslmage查看器的fsimage。</td>
+</tr>
+<tr>
+<td align="center">fetchdt</td>
+<td align="center">从NameNode获取团令牌。</td>
+</tr>
+<tr>
+<td align="center">jobtracker</td>
+<td align="center">运行MapReduce工作跟踪节点。</td>
+</tr>
+<tr>
+<td align="center">pipes</td>
+<td align="center">运行管道的工作。</td>
+</tr>
+<tr>
+<td align="center">tasktracker</td>
+<td align="center">运行MapReduce任务跟踪节点。</td>
+</tr>
+<tr>
+<td align="center">historyserver</td>
+<td align="center">运行作业历史记录服务器作为一个独立的守护进程。</td>
+</tr>
+<tr>
+<td align="center">job</td>
+<td align="center">操纵MapReduce工作。</td>
+</tr>
+<tr>
+<td align="center">queue</td>
+<td align="center">获取有关作业队列信息。</td>
+</tr>
+<tr>
+<td align="center">version</td>
+<td align="center">打印版本。</td>
+</tr>
+<tr>
+<td align="center">jar <jar></td>
+<td align="center">运行一个jar文件。</td>
+</tr>
+<tr>
+<td align="center">distcp <srcurl> <desturl></td>
+<td align="center">递归复制文件或目录。</td>
+</tr>
+<tr>
+<td align="center">archive -archiveName NAME -p</td>
+<td align="center">创建一个Hadoop的归档。</td>
+</tr>
+<tr>
+<td align="center">classpath</td>
+<td align="center">打印需要得到Hadoop jar和所需要的库的类路径。</td>
+</tr>
+<tr>
+<td align="center">daemonlog</td>
+<td align="center">为每个守护进程获取/设置日志级别。</td>
+</tr>
+</tbody></table>
+<h4 id="如何与MapReduce工作互动"><a href="#如何与MapReduce工作互动" class="headerlink" title="如何与MapReduce工作互动"></a>如何与MapReduce工作互动</h4><p>Usage： hadoop job [GENERIC_OPTIONS]</p>
+<p>一下是在一个Hadoop的作业的可用通用选项。</p>
+<table>
+<thead>
+<tr>
+<th align="center">GENERIC_OPTIONS</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">-submit <job-file></td>
+<td align="center">提交作业。</td>
+</tr>
+<tr>
+<td align="center">status <job-id></td>
+<td align="center">打印映射，并减少完成的百分比以及所有的工作的计数器。</td>
+</tr>
+<tr>
+<td align="center">counter <job-id>  <group-name> <countername></td>
+<td align="center">打印的计数器值。</td>
+</tr>
+<tr>
+<td align="center">-events <job-id> &lt;fromevent-#&gt; &lt;#-of-events&gt;</td>
+<td align="center">打印接收到JobTracker为给定范围内的事件的详细信息。</td>
+</tr>
+<tr>
+<td align="center">-history [all] <jobOutputDir></td>
+<td align="center">打印作业的详细信息，作业未能终止时提供详细的信息。有关作业的更多详细信息，如每个成功的任务，可以尝试通过制定[all]选项查看。</td>
+</tr>
+<tr>
+<td align="center">-list[all]</td>
+<td align="center">显示所有作业。-list只显示尚未完成的作业。</td>
+</tr>
+<tr>
+<td align="center">-kill-task <task-id></td>
+<td align="center">终止任务。终止任务不计入失败的尝试。</td>
+</tr>
+<tr>
+<td align="center">-fail-task <task-id></td>
+<td align="center">失败的任务。</td>
+</tr>
+<tr>
+<td align="center">set-priority <job-id> <priority></td>
+<td align="center">更改作业的优先级。允许设置的优先级有：VERY_HIGH, HIGH, NORMAL, LOW, VERY_LOW</td>
+</tr>
+</tbody></table>
+<h5 id="查看作业的状态"><a href="#查看作业的状态" class="headerlink" title="查看作业的状态"></a>查看作业的状态</h5><blockquote>
+<p>$ $HADOOP_HOME/bin/hadoop job -status <job-id></p>
+<p>$ $HADOOP_HOME/bin/hadoop job -status job_20200615666_0001</p>
+</blockquote>
+<h5 id="在output-dir查看作业历史"><a href="#在output-dir查看作业历史" class="headerlink" title="在output-dir查看作业历史"></a>在output-dir查看作业历史</h5><blockquote>
+<p>$ $HADOOP_HOME/bin/hadoop job -history <dir-name></p>
+<p>$ $HADOOP_HOME/bin/hadoop job -history /user/expert/output</p>
+</blockquote>
+<h5 id="终止任务"><a href="#终止任务" class="headerlink" title="终止任务"></a>终止任务</h5><blockquote>
+<p>$ $HADOOP_HOME/bin/hadoop job -kill <job-id></p>
+<p>$ $HADOOP_HOME/bin/hadoop job -kill job_20200615666_0001</p>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/7.%20Hadoop%20MapReduce/" data-id="ckblsod4r0006m4tqftcfgixo" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Hadoop学习笔记/6. Hadoop命令参考" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/6.%20Hadoop%E5%91%BD%E4%BB%A4%E5%8F%82%E8%80%83/" class="article-date">
+  <time datetime="2020-06-19T05:50:36.540Z" itemprop="datePublished">2020-06-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/6.%20Hadoop%E5%91%BD%E4%BB%A4%E5%8F%82%E8%80%83/">Hadoop学习笔记/6. Hadoop命令参考</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="6-Hadoop命令参考"><a href="#6-Hadoop命令参考" class="headerlink" title="6. Hadoop命令参考"></a>6. Hadoop命令参考</h1><p>在<code>$HADOOP_HOME/bin/hadoop fs</code>里有很多命令。</p>
+<p>$HADOOP_HOME/bin/hadoop fs -help命令会显示一个简短的用法。</p>
+<p>使用参数的一般方式如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&quot;&lt;path&gt;&quot; 是文件或目录名称。</span><br><span class="line">&quot;&lt;path&gt;...&quot;是一个或者多个文件或目录名称。</span><br><span class="line">&quot;&lt;file&gt;&quot;指文件名字。</span><br><span class="line">&quot;&lt;src&gt;&quot;和&quot;&lt;dest&gt;&quot;是一个有向的操作的路径。</span><br><span class="line">&quot;&lt;localSrc&gt;&quot;和&quot;&lt;localDest&gt;&quot;是本地文件系统中一个有向操作的路径。</span><br></pre></td></tr></table></figure>
+
+<p>所有其他文件和路径名是指HDFS内部的对象。</p>
+<table>
+<thead>
+<tr>
+<th>1.</th>
+<th>ls <path> ：列出路径指定的目录中的内容，显示出名称，权限，拥有者，大小和修改日期等条目。</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>2.</td>
+<td><strong>lsr <path></strong>：行为类似于 -ls，但递归显示路径的所有子目录项。</td>
+</tr>
+<tr>
+<td>3.</td>
+<td><strong>du <path></strong>：显示磁盘使用率，以字节为单位，对所有的文件，这些文件匹配的路径，文件名报告使用完整HDFS协议前缀。</td>
+</tr>
+<tr>
+<td>4.</td>
+<td><strong>dus <path></strong>：类似-du，但打印路径中的所有文件/目录的磁盘使用情况的摘要。</td>
+</tr>
+<tr>
+<td>5.</td>
+<td><strong>mv <src> <dest></strong>：在HDFS的文件或目录里移动src到dest。</td>
+</tr>
+<tr>
+<td>6.</td>
+<td><strong>cp <src> <dest></strong>： 在HDFS里复制src中的文件或目录到dest。</td>
+</tr>
+<tr>
+<td>7.</td>
+<td><strong>rm <path></strong>： 删除文件或路径标识的空目录。</td>
+</tr>
+<tr>
+<td>8.</td>
+<td><strong>rmr <path></strong>：删除路径标识的文件或目录。递归删除所有子条目（例如，文件或路径的子目录）。</td>
+</tr>
+<tr>
+<td>9.</td>
+<td><strong>put <localSrc> <dest></strong>：从本地localSrc文件系统中的DFS标识文件或目录内复制到dest。</td>
+</tr>
+<tr>
+<td>10.</td>
+<td><strong>copyFromLocal <localSrc> <dest></strong>：等同于-put</td>
+</tr>
+<tr>
+<td>11.</td>
+<td><strong>moveFromLocal <localSrc>  <dest></strong>：从标识localSrc本地文件系统中的文件或目录中HDFS复制到dest，然后删除本地副本。</td>
+</tr>
+<tr>
+<td>12.</td>
+<td><strong>get [-crc] <src> <localDest></strong>：拷贝标识sr到localDest本地文件系统路径HDFS文件或目录。</td>
+</tr>
+<tr>
+<td>13.</td>
+<td><strong>getmerge <src> <localDest></strong>：检索匹配的路径的src HDFS中的所有文件，并将它们复制合并文件到标识localDest本地文件系统中。</td>
+</tr>
+<tr>
+<td>14.</td>
+<td><strong>cat <file-name></strong>：显示在标准输出文件名中的内容。</td>
+</tr>
+<tr>
+<td>15.</td>
+<td><strong>copyToLocal <src> <localDest></strong>：等同于-get</td>
+</tr>
+<tr>
+<td>16.</td>
+<td><strong>moveToLocal <src> <localDest></strong>：工作方式类似于-get，但删除HDFS复制成功。</td>
+</tr>
+<tr>
+<td>17.</td>
+<td><strong>mkdir <path></strong>：创建一个HDFS命名的目录路径。</td>
+</tr>
+<tr>
+<td>18.</td>
+<td><strong>setrep [-R] [-w] rep <path></strong>：设置标识路径代表文件的目标文件复制因子。（实际的复制因子会向着随着时间的推移目标移动）。</td>
+</tr>
+<tr>
+<td>19.</td>
+<td><strong>touchz <path></strong>：在路径上创建包含当前时间作为时间戳的文件。如果文件已经存在于路径上就失败，除非文件大小为0。</td>
+</tr>
+<tr>
+<td>20.</td>
+<td><strong>test -[ezd] <path></strong>：如果路径存在且长度为0则返回1，如果是1个目录或其他返回0。</td>
+</tr>
+<tr>
+<td>21.</td>
+<td><strong>stat [format] <path></strong>：打印有关的路径信息。格式是接收块文件大小(%b), 文件名(%n)， 块大小(%o), 复制(%r)和修改日期(%y, %Y)的字符串。</td>
+</tr>
+<tr>
+<td>22.</td>
+<td><strong>tail [-f] <file2name></strong>: 显示在标准输出文件的最后1KB。</td>
+</tr>
+<tr>
+<td>23.</td>
+<td><strong>chmod [-R] mode,mode,… <path> …</strong> : 变化符合路径标识的一个或多个对象关联的文件权限，-R是递归执行变更，模式是3为八进制模式（和Linux一样）。</td>
+</tr>
+<tr>
+<td>24.</td>
+<td><strong>chown [-R] [owner] [:[group]] <path>…</strong> ：设置所属组标识路径的文件或目录…如果指定-R就是设置组递归。</td>
+</tr>
+<tr>
+<td>25.</td>
+<td><strong>chgrp [-R] group <path>…</strong> ：设置所属组标识路径的文件或目录，-R设置组递归。</td>
+</tr>
+<tr>
+<td>26.</td>
+<td><strong>help <cmd-name></strong> ：返回使用上面列出的命令之一的信息。</td>
+</tr>
+</tbody></table>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/6.%20Hadoop%E5%91%BD%E4%BB%A4%E5%8F%82%E8%80%83/" data-id="ckblsod4q0005m4tq3sl36g84" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Hadoop学习笔记/5. Hadoop HDFS操作" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/5.%20Hadoop%20HDFS%E6%93%8D%E4%BD%9C/" class="article-date">
+  <time datetime="2020-06-19T05:50:36.522Z" itemprop="datePublished">2020-06-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/5.%20Hadoop%20HDFS%E6%93%8D%E4%BD%9C/">Hadoop学习笔记/5. Hadoop HDFS操作</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="5-Hadoop-HDFS操作"><a href="#5-Hadoop-HDFS操作" class="headerlink" title="5. Hadoop HDFS操作"></a>5. Hadoop HDFS操作</h1><h4 id="启动HDFS"><a href="#启动HDFS" class="headerlink" title="启动HDFS"></a>启动HDFS</h4><p>首先，格式化配置HDFS文件系统，打开NameNode（HDFS服务器），然后执行以下命令：</p>
+<blockquote>
+<p>$ hadoop namenode -format</p>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200615115851.png" alt="image-20200615115851890"></p>
+<p>格式化HDFS后，启动分布式文件系统。以下命令将启动名称节点namenode和数据节点datanode的集群。<strong>注意要在hadoop目录下执行命令</strong>：</p>
+<blockquote>
+<p>$ sbin/start-dfs.sh</p>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200615120149.png" alt="image-20200615120149031"></p>
+<h4 id="HDFS的文件列表"><a href="#HDFS的文件列表" class="headerlink" title="HDFS的文件列表"></a>HDFS的文件列表</h4><p>加载服务器信息后，使用<code>ls</code>可以找出文件列表中的目录、文件状态。</p>
+<p>下面是ls, 可以传递一个目录或文件名作为参数的语法：</p>
+<blockquote>
+<p>$ $HADOOP_HOME/bin/hadoop fs - ls <args></p>
+</blockquote>
+<h4 id="将数据插入到HDFS"><a href="#将数据插入到HDFS" class="headerlink" title="将数据插入到HDFS"></a>将数据插入到HDFS</h4><p>假设在本地系统的file.txt文件中的数据应当保存在HDFS文件系统。</p>
+<p>按照下面给出插入在Hadoop的文件系统所需要的文件的步骤。</p>
+<p>第一步，必须创建一个输入目录。</p>
+<blockquote>
+<p>$ $HADOOP_HOME/bin/hadoop fs -mkdir /user/input<img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200615124556.png" alt="image-20200615124556221"></p>
+</blockquote>
+<p>第二步，传输并使用本地系统put命令，Hadoop文件系统中存储数据文件。</p>
+<blockquote>
+<p>$ $HADOOP_HOME/bin/hadoop fs -put /root/file.txt /user/input</p>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200615124756.png" alt="image-20200615124755971"></p>
+<p>第三步，使用ls命令验证文件。</p>
+<blockquote>
+<p>$ $HADOOP_HOME/bin/hadoop fs -ls /user/input</p>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200615124904.png" alt="image-20200615124904781"></p>
+<h4 id="从HDFS中检索数据"><a href="#从HDFS中检索数据" class="headerlink" title="从HDFS中检索数据"></a>从HDFS中检索数据</h4><p>假设在HDFS中文件名为file.txt。</p>
+<p>检索从Hadoop文件系统的文件：</p>
+<p>第一步，使用cat命令查看来自HDFS的数据</p>
+<blockquote>
+<p>$ $HADOOP_HOME/bin/hadoop fs -cat /user/input/file.txt</p>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200615125109.png" alt="image-20200615125109030"></p>
+<p>第二步，从HDFS得到文件使用get命令到本地文件系统</p>
+<blockquote>
+<p>$ $HADOOP_HOME/bin/hadoop      fs    -get /user/input/     /root/hadoop_tp/</p>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200615125641.png" alt="image-20200615125641497"></p>
+<p>HDFS的文件get到了本地文件系统。</p>
+<h4 id="关闭HDFS"><a href="#关闭HDFS" class="headerlink" title="关闭HDFS"></a>关闭HDFS</h4><blockquote>
+<p>$ $HADOOP_HOME/sbin/stop-dfs.sh</p>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200615134150.png" alt="image-20200615125824698"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/5.%20Hadoop%20HDFS%E6%93%8D%E4%BD%9C/" data-id="ckblsod4p0004m4tqct0m93a3" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Hadoop学习笔记/4. Hadoop HDFS" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/4.%20Hadoop%20HDFS/" class="article-date">
+  <time datetime="2020-06-19T05:50:36.516Z" itemprop="datePublished">2020-06-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/4.%20Hadoop%20HDFS/">Hadoop学习笔记/4. Hadoop HDFS</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="4-Hadoop-HDFS"><a href="#4-Hadoop-HDFS" class="headerlink" title="4. Hadoop HDFS"></a>4. Hadoop HDFS</h1><p>Hadoop文件系统使用分布式文件系统设计开发。不像其他的分布式系统，它运行在普通硬件。</p>
+<p>HDFS是高度容错以及使用低成本的硬件设计的文件系统。</p>
+<p>HDFS拥有超大型的数据量，并提供了更轻松的访问。为了存储这些庞大的数据，这些文件都存储在多台机器上。这些文件的存储是以冗余的方式来保护系统在发生故障时免受可能的数据丢失。HDFS也可以并行处理应用程序。</p>
+<h4 id="HDFS的特点"><a href="#HDFS的特点" class="headerlink" title="HDFS的特点"></a>HDFS的特点</h4><ul>
+<li>它适用于分布式存储和处理。</li>
+<li>Hadoop提供的命令接口与HDFS进行交互。</li>
+<li>名称节点（namenode）和数据节点（datanode）帮助用户通过内置的服务器轻松检查集群的状态。</li>
+<li>流式访问文件系统数据。</li>
+<li>HDFS提供了文件的权限和验证。</li>
+</ul>
+<h4 id="HDFS架构"><a href="#HDFS架构" class="headerlink" title="HDFS架构"></a>HDFS架构</h4><p>Hadoop文件系统的体系结构如图：</p>
+<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200615113835.png" alt="image-20200615113835324"></p>
+<p>HDFS遵循主从架构，它具有以下元素：</p>
+<h5 id="名称节点-Namenode"><a href="#名称节点-Namenode" class="headerlink" title="名称节点 - Namenode"></a>名称节点 - Namenode</h5><p>名称节点是包含GNU/Linux操作系统和软件名称节点的普通硬件。它是一个可以在商业硬件上运行的软件。</p>
+<p>具有名称节点的系统作为主服务器。它执行以下任务：</p>
+<ul>
+<li>管理文件系统命名空间。</li>
+<li>规范客户端对文件的访问。</li>
+<li>它也执行文件系统操作。如重命名，关闭和打开文件和目录。</li>
+</ul>
+<h5 id="数据节点-Datanode"><a href="#数据节点-Datanode" class="headerlink" title="数据节点 - Datanode"></a>数据节点 - Datanode</h5><p>Datanode是具有GNU/Linux操作系统和软件Datanode的普通硬件。对于集群中的每个节点（普通硬件/系统），有一个数据节点。这些节点管理数据并存储在它们的系统。</p>
+<ul>
+<li>数据节点上的文件系统根据用户请求执行读写操作。</li>
+<li>还可以根据名称节点的指令执行操作，如块的创建，删除和复制。</li>
+</ul>
+<h4 id="块"><a href="#块" class="headerlink" title="块"></a>块</h4><p>一般用户数据存储在HDFS文件系统。</p>
+<p>在一个文件系统中的文件被划分为一个或多个段和/或存储在个人数据的节点。这些文件段被称为块。</p>
+<p>也就是说数据的HDFS可以读取或写入的最小量被称为一个块。缺省的块大小为64MB，这可以按需根据HDFS配置来改变。</p>
+<h4 id="HDFS的目标"><a href="#HDFS的目标" class="headerlink" title="HDFS的目标"></a>HDFS的目标</h4><ul>
+<li>故障检测和恢复：由于HDFS包括大量的普通硬件，部件故障频繁。因此HDFS应该具有快速和自动的故障检测和恢复机制。</li>
+<li>巨大的数据集：HDFS有数百个集群节点来管理其庞大的数据集的应用程序。</li>
+<li>数据硬件：请求的任务当计算发生不久后可以高效的完成。HDFS涉及到巨大的数据集，它需要减少网络通信量，增加吞吐量。</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/4.%20Hadoop%20HDFS/" data-id="ckblsod4o0003m4tq8yi709mp" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Hadoop学习笔记/3. Hadoop是什么" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/3.%20Hadoop%E6%98%AF%E4%BB%80%E4%B9%88/" class="article-date">
+  <time datetime="2020-06-19T05:50:36.512Z" itemprop="datePublished">2020-06-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/3.%20Hadoop%E6%98%AF%E4%BB%80%E4%B9%88/">Hadoop学习笔记/3. Hadoop是什么</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="3-Hadoop是什么"><a href="#3-Hadoop是什么" class="headerlink" title="3. Hadoop是什么"></a>3. Hadoop是什么</h1><p>Hadoop是使用Java编写的、允许分布在集群、使用简单的编程模型的计算机处理大型数据集的Apache开源框架。</p>
+<p>Hadoop框架应用了工程提供的跨计算机集群的分布式存储和计算的环境，是专为从单一服务器扩展到上千台服务器、让每个机器都可以提供本地计算和存储的框架。</p>
+<h4 id="Hadoop的架构"><a href="#Hadoop的架构" class="headerlink" title="Hadoop的架构"></a>Hadoop的架构</h4><p>在其核心，Hadoop主要有两个层次，即：</p>
+<ul>
+<li>加工/计算层（MapReduce）</li>
+<li>存储层（Hadoop分布式文件系统）</li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200615110250.png" alt="image-20200615110250391"></p>
+<h4 id="MapReduce"><a href="#MapReduce" class="headerlink" title="MapReduce"></a>MapReduce</h4><p>MapReduce是一种并行编程模型，用于编写普通硬件的设计，谷歌对大量数据的高效处理（多TB数据集）的分布式应用在大型集群（数千个节点）以及可靠的容错方式。</p>
+<p>MapReduce程序可在Apache的开源框架Hadoop上运行。</p>
+<h4 id="Hadoop分布式文件系统"><a href="#Hadoop分布式文件系统" class="headerlink" title="Hadoop分布式文件系统"></a>Hadoop分布式文件系统</h4><p>Hadoop分布式文件系统（HDFS）基于谷歌文件系统（GFS），并提供了一个设计在普通硬件上运行的分布式文件系统。它与现有的分布式文件系统有许多相似之处。它高度容错并设计成部署在低成本的硬件上。</p>
+<p>HDFS提供了高吞吐量的应用数据访问，并适用于具有大数据集的应用程序。</p>
+<p>除了上面提到的两个核心组件，Hadoop框架还包括以下两个模块：</p>
+<ul>
+<li>Hadoop通用工具(Common Utilities）：Java库和其他的Hadoop组件所需要的实用工具。</li>
+<li>Hadoop YARN：这是作业调度和集群资源管理的框架。</li>
+</ul>
+<h4 id="Hadoop如何工作？"><a href="#Hadoop如何工作？" class="headerlink" title="Hadoop如何工作？"></a>Hadoop如何工作？</h4><p>建立重新配置、处理大规模数据的服务器是相当昂贵的。</p>
+<p>作为替代，可以联系许多采用单CPU的普通电脑在一起，作为一个单一功能的分布式系统。</p>
+<p>实际上，集群的机器可以并行地获取数据集，并提供一个高得多的吞吐量。此外，这样比一个高端服务器的价格更便宜，因此使用Hadoop跨集群在低成本上的机器上运行是一个不错的选择。</p>
+<p>Hadoop运行整个计算机集群的代码。这个过程包括以下核心任务由Hadoop执行：</p>
+<ul>
+<li>数据最初分为目录和文件。文件分为64M和128M（最好用128M）统一大小块。</li>
+<li>然后这些文件被分布在不同的集群节点，以便进一步处理。</li>
+<li>HDFS在本地文件系统的顶端监督处理。</li>
+<li>块复制处理硬件故障。</li>
+<li>检查代码是否已成功执行。</li>
+<li>执行发生映射之间，减少阶段的排序。</li>
+<li>发送排序的数据到某一个计算机。</li>
+<li>为每个作业编写调试日志。</li>
+</ul>
+<h4 id="Hadoop的优势"><a href="#Hadoop的优势" class="headerlink" title="Hadoop的优势"></a>Hadoop的优势</h4><ul>
+<li>Hadoop框架允许用户快速编写和测试分布式系统。有效地在整个集群上自动分配数据和工作，充分利用CPU内核的基本并行度。</li>
+<li>Hadoop不依赖硬件，提供容错和高可用性（fault tolerance and high availability, FTHA），Hadoop库本身已被设计在应用层，可以检测和处理故障。</li>
+<li>服务器可以添加或从集群动态删除，Hadoop可继续不中断地运行。</li>
+<li>Hadoop是开源的的，它基于Java并兼容所有的平台。</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/3.%20Hadoop%E6%98%AF%E4%BB%80%E4%B9%88/" data-id="ckblsod4o0002m4tq9jxk7t71" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Hadoop学习笔记/2. Hadoop大数据解决方案" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/2.%20Hadoop%E5%A4%A7%E6%95%B0%E6%8D%AE%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/" class="article-date">
+  <time datetime="2020-06-19T05:50:36.476Z" itemprop="datePublished">2020-06-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/2.%20Hadoop%E5%A4%A7%E6%95%B0%E6%8D%AE%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/">Hadoop学习笔记/2. Hadoop大数据解决方案</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="2-Hadoop大数据解决方案"><a href="#2-Hadoop大数据解决方案" class="headerlink" title="2. Hadoop大数据解决方案"></a>2. Hadoop大数据解决方案</h1><h4 id="传统的企业方法"><a href="#传统的企业方法" class="headerlink" title="传统的企业方法"></a>传统的企业方法</h4><p>在这种方法中，一个企业将有一个计算机存储和处理大数据。</p>
+<p>对于存储而言，程序员会自己选择数据库厂商，如在Oracle, IBM等的帮助下完成，通过用户交互和使用应用程序进而获取并处理数据存储和分析。</p>
+<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200615105158.png" alt="image-20200615105158230"></p>
+<h4 id="局限性"><a href="#局限性" class="headerlink" title="局限性"></a>局限性</h4><p>这种方式能完美地处理那些可以由标准的数据库服务器来存储、处理数据的服务器较少的数据。</p>
+<p>但是当设计到大量的可伸缩数据，这是一个繁忙的业务，只能通过单一的数据库瓶颈来处理这些数据。</p>
+<h4 id="谷歌的解决方案"><a href="#谷歌的解决方案" class="headerlink" title="谷歌的解决方案"></a>谷歌的解决方案</h4><p>谷歌使用一种称为MapReduce的算法解决了这个问题。这个算法将任务分成小份，并将它们分配到多台计算机，并且从这些机器收集结果并综合，形成了结果数据集。</p>
+<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200615105657.png" alt="image-20200615105657455"></p>
+<h4 id="Hadoop"><a href="#Hadoop" class="headerlink" title="Hadoop"></a>Hadoop</h4><p>使用谷歌提供的解决方案，Doug Cutting和他的团队开发了一个开源项目叫做Hadoop。</p>
+<p>Hadoop使用MapReduce算法运行。</p>
+<p>Hadoop用于开发可以执行完整的统计分析大数据的应用程序。</p>
+<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200615105852.png" alt="image-20200615105852848"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/2.%20Hadoop%E5%A4%A7%E6%95%B0%E6%8D%AE%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/" data-id="ckblsod4n0001m4tq3xpyben3" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Hadoop学习笔记/1. Hadoop简介" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/1.%20Hadoop%E7%AE%80%E4%BB%8B/" class="article-date">
+  <time datetime="2020-06-19T05:50:36.463Z" itemprop="datePublished">2020-06-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/1.%20Hadoop%E7%AE%80%E4%BB%8B/">Hadoop学习笔记/1. Hadoop简介</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="1-Hadoop简介"><a href="#1-Hadoop简介" class="headerlink" title="1. Hadoop简介"></a>1. Hadoop简介</h1><p>Hadoop是一个开源框架，它允许整个集群使用简单编程模型的计算机，在分布式环境存储并处理大数据。它的目的是从单一的服务器到上千台机器的扩展，每一台机器都可以提供本地计算和存储。</p>
+<h4 id="什么是大数据？"><a href="#什么是大数据？" class="headerlink" title="什么是大数据？"></a>什么是大数据？</h4><p>大数据是不能用传统的计算机技术处理的大型数据集的集合。它不是一个单一的技术或工具，而是涉及的业务和技术的许多领域。</p>
+<h4 id="大数据应用场景"><a href="#大数据应用场景" class="headerlink" title="大数据应用场景"></a>大数据应用场景</h4><p>大数据包括不同的设备和应用程序所产生的数据。应用场景包括：</p>
+<ul>
+<li>黑匣子数据：这是直升机、飞机、喷气机的一个组成部分，它捕获飞行机组的声音、麦克风和耳机的录音，以及飞机的性能信息。</li>
+<li>社会化媒体数据：社交网络如Facebook和Twitter。</li>
+<li>证券交易所数据：交易所数据保存有关的“买入”和“卖出”等信息。</li>
+<li>电网数据：电网数据保持相对于基站所消耗的特定节点的信息。</li>
+<li>交通运输数据：交通数据包括车辆的型号、容量、距离和可用性。</li>
+<li>搜索引擎数据：搜索引擎获取大量来自不同数据库中的数据。</li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200615103132.png" alt="image-20200615103123677"></p>
+<p>因此，大数据包括体积庞大、高流速和扩扩展的各种数据。</p>
+<p>数据分为三种类型：</p>
+<ul>
+<li>结构化数据：关系数据。</li>
+<li>半结构化数据：XML数据。</li>
+<li>非结构化数据：Word, PDF, 文本，媒体日志。</li>
+</ul>
+<h4 id="大数据技术"><a href="#大数据技术" class="headerlink" title="大数据技术"></a>大数据技术</h4><p>大数据技术是为了提供更准确的分析，这可能影响更多的具体决策，可以提高运行效率、降低成本、减少业务风险。</p>
+<p>为了利用大数据，需要管理和处理实时的结构化和非结构化的海量数据，还需要可以保护数据隐私和安全的基础设施。</p>
+<p>主要研究两类技术：</p>
+<h5 id="操作大数据"><a href="#操作大数据" class="headerlink" title="操作大数据"></a>操作大数据</h5><p>这些包括像MongoDB系统，提供业务实时的能力，主要是数据捕获和存储互动工作。</p>
+<p>NoSQL大数据系统的设计充分利用了过去让大量的计算机以廉价高效运行的云计算架构的优势。这使得运营大数据工作负载更容易管理、更便宜、更快。</p>
+<p>一些NoSQL系统可以提供深入了解基于使用最少的编码而无需数据科学家和额外的基础架构的实时数据模式。</p>
+<h5 id="分析大数据"><a href="#分析大数据" class="headerlink" title="分析大数据"></a>分析大数据</h5><p>这些包括如大规模并行处理（MPP）数据库系统和MapReduce提供触及大部分或全部数据的分析能力的系统。</p>
+<p>MapReduce在提供分析数据的基础上，可以按比例从单个服务器扩展到成千上万个高端和低端机。</p>
+<p>这两类技术是互补的，并且经常一起部署。</p>
+<h4 id="操作和分析系统"><a href="#操作和分析系统" class="headerlink" title="操作和分析系统"></a>操作和分析系统</h4><table>
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center">操作</th>
+<th align="center">分析</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">等待时间</td>
+<td align="center">1ms ~ 100ms</td>
+<td align="center">1min ~ 100min</td>
+</tr>
+<tr>
+<td align="center">并发</td>
+<td align="center">1000 ～ 100000</td>
+<td align="center">1 ～ 10</td>
+</tr>
+<tr>
+<td align="center">访问模式</td>
+<td align="center">写入和读取</td>
+<td align="center">读取</td>
+</tr>
+<tr>
+<td align="center">查询</td>
+<td align="center">选择</td>
+<td align="center">非选择性</td>
+</tr>
+<tr>
+<td align="center">数据范围</td>
+<td align="center">操作</td>
+<td align="center">回溯</td>
+</tr>
+<tr>
+<td align="center">最终用户</td>
+<td align="center">顾客</td>
+<td align="center">数据科学家</td>
+</tr>
+<tr>
+<td align="center">技术</td>
+<td align="center">NoSQL</td>
+<td align="center">MapReduce、MPP数据库</td>
+</tr>
+</tbody></table>
+<h4 id="大数据的挑战"><a href="#大数据的挑战" class="headerlink" title="大数据的挑战"></a>大数据的挑战</h4><p>大数据相关的主要挑战如下：</p>
+<ul>
+<li>采集数据</li>
+<li>策展</li>
+<li>存储</li>
+<li>搜索</li>
+<li>分享</li>
+<li>传输</li>
+<li>分析</li>
+<li>展示</li>
+</ul>
+<p>为了应对上述挑战，企业通常需要企业级服务器的帮助。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/1.%20Hadoop%E7%AE%80%E4%BB%8B/" data-id="ckblsod4h0000m4tq7ochc5s7" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-Spark学习笔记/9. Spark Filter函数" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/9.%20Spark%20Filter%E5%87%BD%E6%95%B0/" class="article-date">
@@ -237,553 +1030,6 @@
 
 
   
-    <article id="post-Spark学习笔记/6. RDD持久化" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/6.%20RDD%E6%8C%81%E4%B9%85%E5%8C%96/" class="article-date">
-  <time datetime="2020-06-19T05:47:23.174Z" itemprop="datePublished">2020-06-19</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/6.%20RDD%E6%8C%81%E4%B9%85%E5%8C%96/">Spark学习笔记/6. RDD持久化</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="6-RDD持久化"><a href="#6-RDD持久化" class="headerlink" title="6. RDD持久化"></a>6. RDD持久化</h1><p>Spark通过在操作中将数据持久保存在内存中，提供了一种处理数据集的便捷方式。</p>
-<p>在持久化RDD的同时，每个节点都存储它在内存中计算的任何分区，也可以在该数据集的其他任务中重用他们。</p>
-<p>可以使用<code>persist()</code>或<code>cache(0)</code>方法来标记要保留的RDD。Spark的缓存是容错的。在任何情况下，如果RDD的分区丢失，spark将使用最初创建它的<code>转换</code>自动重新计算。</p>
-<p>存在可用于存储持久RDD的不同存储级别。通过将<code>StorageLevel</code>对象（Scala，java，python）传递给<code>persist()</code>来使用这些级别。<code>cache()</code>方法用于默认存储级别，即<code>StorageLevel.MEMORY_ONLY</code>。</p>
-<p>存储级别的集合：</p>
-<table>
-<thead>
-<tr>
-<th align="center">存储级别</th>
-<th align="center">描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center"><code>MEMORY_ONLY</code></td>
-<td align="center">将RDD存储为JVM中的反序列化Java对象。这是默认级别。如果RDD不适合内存，则每次需要时都不会缓存和重新计算某些分区。</td>
-</tr>
-<tr>
-<td align="center"><code>MEMORY_ADD_DISK</code></td>
-<td align="center">它将RDD存储为JVM中反序列化Java对象。如果RDD不适合内存，请存储在适合磁盘的分区，并在需要时从磁盘读取它们。</td>
-</tr>
-<tr>
-<td align="center"><code>MEMORY_ONLY_SER</code></td>
-<td align="center">它将RDD存储为序列化Java对象（即每个分区一个字节的数组）。这通常比反序列对象更节省空间。</td>
-</tr>
-<tr>
-<td align="center"><code>MEMORY_ADD_DISK_SER</code></td>
-<td align="center">类似于<code>MEMORY_DISK_SER</code>，但是将内存中不适合的分区溢出到磁盘而不是重新计算它们。</td>
-</tr>
-<tr>
-<td align="center"><code>DISK_ONLY</code></td>
-<td align="center">它仅将RDD分区存储在磁盘上。</td>
-</tr>
-<tr>
-<td align="center"><code>MEMORY_ONLY_2</code>, <code>MEMORY_AND_DISK_2</code></td>
-<td align="center">它与上面的级别相同，但复制两个集群上的每个分区。</td>
-</tr>
-<tr>
-<td align="center"><code>OFF_HEAP</code></td>
-<td align="center">类似于<code>MEMORY_ONLY_SER</code>，但将数据存储在堆外内存中。必须启用堆外内存。</td>
-</tr>
-</tbody></table>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/6.%20RDD%E6%8C%81%E4%B9%85%E5%8C%96/" data-id="ckblska72000jlktqfbey2e5f" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Spark学习笔记/5.RDD操作" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/5.RDD%E6%93%8D%E4%BD%9C/" class="article-date">
-  <time datetime="2020-06-19T05:47:23.129Z" itemprop="datePublished">2020-06-19</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/5.RDD%E6%93%8D%E4%BD%9C/">Spark学习笔记/5.RDD操作</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="5-RDD操作"><a href="#5-RDD操作" class="headerlink" title="5.RDD操作"></a>5.RDD操作</h1><p>RDD提供两种类型的操作： </p>
-<ol>
-<li>转换</li>
-<li>行动</li>
-</ol>
-<h4 id="1-转换"><a href="#1-转换" class="headerlink" title="1. 转换"></a>1. 转换</h4><p>在Spark中，转换的作用是从现有数据集创建新数据集。</p>
-<p>转换是惰性的，它们仅在动作需要将结果返回到驱动程序时才计算。</p>
-<p>常用的RDD转换：</p>
-<ul>
-<li><code>map(func)</code> ： 它返回一个新的分布式数据集，该数据集是通过<code>func</code>传递源的每个元素而形成的。</li>
-<li><code>filter(func)</code> ： 它返回一个新数据集，该数据集是通过选择函数<code>func</code>返回<code>true</code>的源元素而形成的。</li>
-<li><code>flatMap(func)</code> ： 这里每个输入项可以映射到零个或多个输出项，因此函数<code>func</code>应该返回序列而不是单个项。</li>
-<li><code>mapPartitions(func)</code> ： 类似于<code>map(func)</code>，但是它是在RDD的每个分区（块）上单独运行，因此当在类型T的RDD上运行时，<code>func</code>必须是<code>Iterator &lt;T&gt; =&gt; Iterator &lt;U&gt;</code>类型。</li>
-<li><code>mapPartitionsWithIndex(func)</code> ： 类似于<code>mapPartitons(func)</code>，它为<code>func</code>提供了一个表示分区索引的整数值，因此当在类型T的RDD上运行时，<code>func</code>必须是类型<code>(Int, Iterator &lt;T&gt;)=&gt; Iterator &lt;U&gt;</code>。</li>
-<li><code>sample(withReplacement, fraction, seed)</code> ： 它使用给定的随机数生成器种子对数据的分数部分进行采样，<code>withReplacement</code>表示有或者没有替换。</li>
-<li><code>union(otherDataset)</code> ： 它返回一个新数据集，其中包含源数据集和参数中元素的并集。</li>
-<li><code>intersection(otherDataset)</code> ： 它返回一个新RDD，其中包含源数据集和参数中的集合元素的交集。</li>
-<li><code>distinct([numPartitions]))</code> ： 它返回一个新数据集，其中包含源数据集的不同元素。</li>
-<li><code>groupByKey([numPartitions])</code> ：当在<code>(K, V)</code>对的数据集上调用时，它返回<code>(K, Iterable)</code>对的数据集。</li>
-<li><code>reduceByKey(func, [numPartitions])</code> ： 当调用<code>(K, V)</code>对的数据集时，返回<code>(K, V)</code>对的数据集，其中使用给定的<code>reduce</code>函数<code>func</code>聚合每个键的值，该函数类型必须是<code>(V, V)=&gt;V</code>。</li>
-<li><code>aggregateByKey(zeroValue)(seqOp, combOp, [numPartitions])</code>  ： 当调用<code>(K, V)</code>对的数据集时，返回<code>(K, V)</code>对的数据集，其中使用给定的组合函数和中性”零“值聚合每个键的值。</li>
-<li><code>sortByKey([ascending], [numPartitions])</code> ： 它返回按键值升序或降序排序的键值对的数据集，如在布尔<code>ascending</code>参数中指定。</li>
-<li><code>join(otherDataset, [numPartitions])</code> ： 当调用类型<code>(K, V)</code>和<code>(K, W)</code>的数据集时，返回<code>(K, (V, W))</code>对的数据集以及每个键的所有元素对。通过<code>leftOuterJoin</code>，<code>rightOuterJoin</code>和<code>fullOuterJoin</code>支持外连接。</li>
-<li><code>cogroup(otherDataset, [numPartitions])</code> ： 当调用类型<code>(K, V)</code>和<code>(K, W)</code>的数据集时，返回<code>(K, (Iterable, Iterable))</code>元祖的数据集。此操作也成为<code>groupWith</code>。</li>
-<li><code>cartersian(otherDataset)</code> ： 当调用类型为T和U的数据集时，返回<code>(T, U)</code>对的数据集（所有元素对）。</li>
-<li><code>pipe(command, [envVars])</code> ： 通过shell命令管道RDD的每个分区，例如一个perl或bash脚本。</li>
-<li><code>coalesce(numPartitions)</code> ： 它将RDD中的分区数减少到<code>numPartitions</code>。</li>
-<li><code>repartition(numPartitions)</code> ： 它随机重新调整RDD中的数据，以创建更多或更少的分区，并在它们之间进行平衡。</li>
-<li><code>repartitionAndSortWithinPartitions(partitioner)</code> ： 它根据给定的分区器对RDD进行重新分区，并在每个生成的分区中的键值对记录进行排序。</li>
-</ul>
-<h4 id="2-操作"><a href="#2-操作" class="headerlink" title="2. 操作"></a>2. 操作</h4><p>在Spark中，操作的作用是在对数据集运行计算后将值返回给驱动程序。</p>
-<p>常用的RDD操作：</p>
-<table>
-<thead>
-<tr>
-<th align="center">操作</th>
-<th align="center">描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center"><code>reduce(func)</code></td>
-<td align="center">它使用函数func(它接受两个参数并返回一个)来聚合数据集的元素。该函数应该是可交换的和可关联的，以便可以并行正确计算。</td>
-</tr>
-<tr>
-<td align="center"><code>collect()</code></td>
-<td align="center">它将数据集的所有元素作为数组返回到驱动程序中。在过滤器或其他返回足够小的数据子集的操作之后，这通常很有用。</td>
-</tr>
-<tr>
-<td align="center"><code>count(func)</code></td>
-<td align="center">返回数据集中的元素个数。</td>
-</tr>
-<tr>
-<td align="center"><code>first()</code></td>
-<td align="center">返回数据集的第一个元素（类似于<code>take(1)</code>）。</td>
-</tr>
-<tr>
-<td align="center"><code>take(n)</code></td>
-<td align="center">返回一个包含数据集的前n个元素的数组。</td>
-</tr>
-<tr>
-<td align="center"><code>takeSample(withReplcament, num, [seed])</code></td>
-<td align="center">返回一个数组，其中包含数据集的num个元素的随机样本，withReplacement表示有或者没有替换，seed是可选的，可以预先指定随机数生成器种子。</td>
-</tr>
-<tr>
-<td align="center"><code>takeOrdered(n, [ordering])</code></td>
-<td align="center">它使用自然顺序或自定义比较器[ordering]返回RDD的前n个元素。</td>
-</tr>
-<tr>
-<td align="center"><code>saveAsTextFile(path)</code></td>
-<td align="center">用于将数据集的元素作为文本文件（或文本文件集）写入本地文件系统，HDFS或任何其他Hadoop支持的文件系统的给定目录中。</td>
-</tr>
-<tr>
-<td align="center"><code>saveAsSequenceFile(path)</code></td>
-<td align="center">它用于在本地文件系统，HDFS或任何其他Hadoop支持的文件系统中的给定路径中将数据集的元素编写为Hadoop SequenceFile。</td>
-</tr>
-<tr>
-<td align="center"><code>saveAsObjectFile(path)</code></td>
-<td align="center">它用于使用java序列化以简单格式编写数据集的元素，然后可以使用<code>SparkContext.objectFile()</code>加载。</td>
-</tr>
-<tr>
-<td align="center"><code>countByKey()</code></td>
-<td align="center">它仅适用于类型(K, V)的RDD。因此它返回（K, Int）对的散列映射与每个键的计数。</td>
-</tr>
-<tr>
-<td align="center"><code>foreach(func)</code></td>
-<td align="center">它在数据集的每个元素上运行函数<code>func</code>以获得副作用，例如更新累加器或与外部存储系统交互。</td>
-</tr>
-</tbody></table>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/5.RDD%E6%93%8D%E4%BD%9C/" data-id="ckblska70000hlktq44ykeshj" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Spark学习笔记/4.弹性分布式数据集（RDD）简介" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/4.%E5%BC%B9%E6%80%A7%E5%88%86%E5%B8%83%E5%BC%8F%E6%95%B0%E6%8D%AE%E9%9B%86%EF%BC%88RDD%EF%BC%89%E7%AE%80%E4%BB%8B/" class="article-date">
-  <time datetime="2020-06-19T05:47:23.058Z" itemprop="datePublished">2020-06-19</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/4.%E5%BC%B9%E6%80%A7%E5%88%86%E5%B8%83%E5%BC%8F%E6%95%B0%E6%8D%AE%E9%9B%86%EF%BC%88RDD%EF%BC%89%E7%AE%80%E4%BB%8B/">Spark学习笔记/4.弹性分布式数据集（RDD）简介</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="4-弹性分布式数据集（RDD）简介"><a href="#4-弹性分布式数据集（RDD）简介" class="headerlink" title="4.弹性分布式数据集（RDD）简介"></a>4.弹性分布式数据集（RDD）简介</h1><p><strong><em>弹性分布式数据集（RDD）是Spark的核心抽象之一。它是一组元素，在集群的节点之间进行分区，以便我们可以对其执行各种并行操作。</em></strong></p>
-<p>创建RDD有两种方法：</p>
-<ol>
-<li>并行化驱动程序中的现有数据。</li>
-<li>引用外部存储系统中的数据集。例如：共享文件系统、HDFS、HBASE或者提供Hadoop InputFormat的数据源。</li>
-</ol>
-<h4 id="1-并行化集合"><a href="#1-并行化集合" class="headerlink" title="1.并行化集合"></a>1.并行化集合</h4><p>要创建并行化集合，在驱动程序的现有集合上调用<code>SparkContext</code>的<code>parallelize</code>方法。</p>
-<p>复制集合中的每个元素以形成可并行操作的分布式数据集。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">var info &#x3D; Array(1, 2, 3, 4)</span><br><span class="line">var distinfo &#x3D; sc.parallelize(info)</span><br></pre></td></tr></table></figure>
-
-<p>现在，可以操作分布式数据集distinfo，例如<code>distinfo.reduce((a, b) =&gt; a + b)</code></p>
-<h4 id="2-外部数据集"><a href="#2-外部数据集" class="headerlink" title="2.外部数据集"></a>2.外部数据集</h4><p>在Spark中，可以从Hadoop支持的任何类型的存储源（如HDFS，Cassandra, HBase甚至本地文件系统）创建分布式数据集。Spark提供对文本文件，<code>SqeuenceFiles</code>和其他类型的Hadoop InputFormat的支持。</p>
-<p><code>SparkContext</code>的<code>textFile</code>方法可用于创建RDD的文本文件。此方法获取文件的URL（计算机上的本地路径或<code>hdfs://</code>)并读取文件的数据。</p>
-<p>可以通过数据集来操作数据。例如使用<code>map</code>和<code>reduceoperations</code>来添加所有行的大小：<code>data.map(s =&gt; s.length).reduce((a, b) =&gt; a + b)</code></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/4.%E5%BC%B9%E6%80%A7%E5%88%86%E5%B8%83%E5%BC%8F%E6%95%B0%E6%8D%AE%E9%9B%86%EF%BC%88RDD%EF%BC%89%E7%AE%80%E4%BB%8B/" data-id="ckblska70000glktqgwh5cd36" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Spark学习笔记/3.Spark组件" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/3.Spark%E7%BB%84%E4%BB%B6/" class="article-date">
-  <time datetime="2020-06-19T05:47:22.953Z" itemprop="datePublished">2020-06-19</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/3.Spark%E7%BB%84%E4%BB%B6/">Spark学习笔记/3.Spark组件</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="3-Spark组件"><a href="#3-Spark组件" class="headerlink" title="3.Spark组件"></a>3.Spark组件</h1><p>Spark是一个计算引擎，可以组织、分发和监控多个应用程序。Spark由不同类型的组件组成：</p>
-<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200611160912.png" alt="image-20200611155359323"></p>
-<h4 id="Spark-Core"><a href="#Spark-Core" class="headerlink" title="Spark Core"></a>Spark Core</h4><p>Spark Core是Spark的核心，执行spark的核心功能。</p>
-<p>Spark Core包含用于任务调度，故障恢复，存储系统和内存管理交互的组件。</p>
-<h4 id="Spark-SQL"><a href="#Spark-SQL" class="headerlink" title="Spark SQL"></a>Spark SQL</h4><ul>
-<li>Spark SQL构建于Spark Core之上，它为结构化数据（structured data）提供支持。</li>
-<li>Spark SQL允许通过SQL以及SQL的Apache Hive变体HQL（Hive查询语言）查询数据。</li>
-<li>它支持JDBC和ODBC连接，这些连接建立java对象与现有数据库，数据仓库和商业智能工具之间的关系。</li>
-<li>它还支持各种数据源，如Hive表，Parquet和JSON。</li>
-</ul>
-<h4 id="Spark-Streaming"><a href="#Spark-Streaming" class="headerlink" title="Spark Streaming"></a>Spark Streaming</h4><ul>
-<li>支持流数据的可伸缩和容错处理。</li>
-<li>它使用Spark Core的快速调度功能来执行流分析。</li>
-<li>它接受小批量数据并对数据执行RDD转换。</li>
-<li>Spark Streaming的设计确保为流数据编写的应用程序可以重复使用，只需要很少的修改即可分析批量的历史数据。</li>
-<li>Web服务器生成的日志文件可以视为数据流的实时示例。</li>
-</ul>
-<h4 id="MLlib"><a href="#MLlib" class="headerlink" title="MLlib"></a>MLlib</h4><p>MLlib是一个包含各种机器学习算法的机器学习库。它包含相关性和假设检验、分类和回归、聚类和主成分分析等。它比Apache Mahout使用的基于磁盘的实现快9倍。</p>
-<h4 id="GraphX"><a href="#GraphX" class="headerlink" title="GraphX"></a>GraphX</h4><p>GraphX是一个用于操作图形和执行图形并行计算的库。它可以创建一个有向图，每个顶点和边可以附加任意属性。</p>
-<p>要操纵图形，它支持各种基本运算符，如子图、连接顶点和聚合消息。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/3.Spark%E7%BB%84%E4%BB%B6/" data-id="ckblska6z000flktq03beded0" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Spark学习笔记/22. Spark字符统计示例" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/22.%20Spark%E5%AD%97%E7%AC%A6%E7%BB%9F%E8%AE%A1%E7%A4%BA%E4%BE%8B/" class="article-date">
-  <time datetime="2020-06-19T05:47:22.653Z" itemprop="datePublished">2020-06-19</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/22.%20Spark%E5%AD%97%E7%AC%A6%E7%BB%9F%E8%AE%A1%E7%A4%BA%E4%BE%8B/">Spark学习笔记/22. Spark字符统计示例</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="22-Spark字符统计示例"><a href="#22-Spark字符统计示例" class="headerlink" title="22. Spark字符统计示例"></a>22. Spark字符统计示例</h1><p>在Spark字符统计示例中，将找出指定文件中每个字符的频率。这里使用scala语言来执行spark操作。</p>
-<h4 id="执行Spark字符计数示例的步骤"><a href="#执行Spark字符计数示例的步骤" class="headerlink" title="执行Spark字符计数示例的步骤"></a>执行Spark字符计数示例的步骤</h4><p>写好一个sparkdata.txt:</p>
-<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612122541.png" alt="image-20200612120827865"></p>
-<p>在hadoop的目录中创建一个目录，保存文本文件：</p>
-<blockquote>
-<p>$ hdfs dfs -mkdir /spark</p>
-</blockquote>
-<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612114904.png" alt="image-20200612114904720"></p>
-<p>将sparkdata.txt文件上传到特定目录中：</p>
-<blockquote>
-<p>$ hdfs dfs -put /root/sparkdata.txt /spark</p>
-</blockquote>
-<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612115106.png" alt="image-20200612115106288"></p>
-<p>在scala模式下打开spark:</p>
-<blockquote>
-<p>$ spark-shell</p>
-</blockquote>
-<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612122530.png" alt="image-20200612120933126"></p>
-<p>创建一个RDD：</p>
-<blockquote>
-<p>scala&gt; val data = sc.textFile(“../../sparkdata.txt”)</p>
-</blockquote>
-<p>这里传递包含数据的文件名。</p>
-<p>读取生成的结果：</p>
-<blockquote>
-<p>scala&gt; data.collect</p>
-</blockquote>
-<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612115806.png" alt="image-20200612115806248"></p>
-<p>以单个字符的形式拆分现有数据：</p>
-<blockquote>
-<p>scala&gt; val splitdata  = data.flatMap(line =&gt; line.split(“”))</p>
-</blockquote>
-<p>读取生成的结果：</p>
-<blockquote>
-<p>scala&gt; splitdata.collect</p>
-</blockquote>
-<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612121913.png" alt="image-20200612121913070"></p>
-<p>执行映射操作：</p>
-<blockquote>
-<p>scala&gt; val mapdata = splitdata.map(word =&gt; (word, 1))</p>
-</blockquote>
-<p>这里给每个字符分配了一个值<strong>1</strong>。</p>
-<p>读取生成的结果：</p>
-<blockquote>
-<p>scala&gt; mapdata.collect</p>
-</blockquote>
-<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612122053.png" alt="image-20200612122052952"></p>
-<p>执行<code>reduce</code>操作：</p>
-<blockquote>
-<p>scala&gt; val reducedata = mapdata.reduceByKey(_+_)</p>
-</blockquote>
-<p>读取生成的结果：</p>
-<blockquote>
-<p>scala&gt; reducedata.collect</p>
-</blockquote>
-<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612122456.png" alt="image-20200612122456444"></p>
-<p>返回结果是计算所有字符及它们的出现次数。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/22.%20Spark%E5%AD%97%E7%AC%A6%E7%BB%9F%E8%AE%A1%E7%A4%BA%E4%BE%8B/" data-id="ckblska6x000clktq1ljdcop5" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Spark学习笔记/21. Spark单词统计示例（word count）" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/21.%20Spark%E5%8D%95%E8%AF%8D%E7%BB%9F%E8%AE%A1%E7%A4%BA%E4%BE%8B%EF%BC%88word%20count%EF%BC%89/" class="article-date">
-  <time datetime="2020-06-19T05:47:22.562Z" itemprop="datePublished">2020-06-19</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/21.%20Spark%E5%8D%95%E8%AF%8D%E7%BB%9F%E8%AE%A1%E7%A4%BA%E4%BE%8B%EF%BC%88word%20count%EF%BC%89/">Spark学习笔记/21. Spark单词统计示例（word count）</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="21-Spark单词统计示例（word-count）"><a href="#21-Spark单词统计示例（word-count）" class="headerlink" title="21. Spark单词统计示例（word count）"></a>21. Spark单词统计示例（word count）</h1><p>在Spark单词统计示例中，将找出指定文件中存在的每个单词的出现频率。这里我们使用Scala语言来执行Spark操作。</p>
-<h4 id="执行Spark字数计算示例的步骤"><a href="#执行Spark字数计算示例的步骤" class="headerlink" title="执行Spark字数计算示例的步骤"></a>执行Spark字数计算示例的步骤</h4><p>在此示例中，查找并显示每个单词的出现次数。在本地服务器中创建一个文本并在其中写入一些单词。</p>
-<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612114032.png" alt="image-20200612114032274"></p>
-<p>在hadoop的目录中创建一个目录，保存文本文件：</p>
-<blockquote>
-<p>$ hdfs dfs -mkdir /spark</p>
-</blockquote>
-<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612114904.png" alt="image-20200612114904720"></p>
-<p>将sparkdata.txt文件上传到特定目录中：</p>
-<blockquote>
-<p>$ hdfs dfs -put /root/sparkdata.txt /spark</p>
-</blockquote>
-<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612115106.png" alt="image-20200612115106288"></p>
-<p>在Scala模式下打开Spark:</p>
-<blockquote>
-<p>$ spark-shell</p>
-</blockquote>
-<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612115211.png" alt="image-20200612115211199"></p>
-<p>创建一个RDD：</p>
-<blockquote>
-<p>scala&gt; val data = sc.textFile(“../../sparkdata.txt”)</p>
-</blockquote>
-<p>这里传递包含数据的任何文件名。</p>
-<p>读取生成的结果：</p>
-<blockquote>
-<p>scala&gt; data.collect</p>
-</blockquote>
-<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612115806.png" alt="image-20200612115806248"></p>
-<p>以单个单词的形式拆分现有数据（制表符作为分隔符）：</p>
-<blockquote>
-<p>scala&gt; val splitdata = data.flatMap(line =&gt; line.split(“\t”))</p>
-</blockquote>
-<p>读取生成的结果：</p>
-<blockquote>
-<p>scala&gt; splitdata.collect</p>
-</blockquote>
-<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612120037.png" alt="image-20200612120037176"></p>
-<p>执行映射操作：</p>
-<blockquote>
-<p>scala&gt; val mapdata =  splitdata.map(word =&gt; (word, 1))</p>
-</blockquote>
-<p>这里每个单词分配值<strong>1</strong>。</p>
-<p>读取生成的结果：</p>
-<blockquote>
-<p>scala&gt; mapdata.collect</p>
-</blockquote>
-<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612122613.png" alt="image-20200612120241496"></p>
-<p>每个单词都有了一个值1.</p>
-<p>现在执行<code>reduce</code>操作：</p>
-<blockquote>
-<p>scala&gt; val reducedata = mapdata.reduceByKey(_+_)</p>
-</blockquote>
-<p>这里汇总了生成的数据。</p>
-<p>读取生成的数据：</p>
-<blockquote>
-<p>scala&gt; reducedata.collect</p>
-</blockquote>
-<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612122622.png" alt="image-20200612120428781"></p>
-<p>返回结果就是每个单词和他们出现的次数。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/21.%20Spark%E5%8D%95%E8%AF%8D%E7%BB%9F%E8%AE%A1%E7%A4%BA%E4%BE%8B%EF%BC%88word%20count%EF%BC%89/" data-id="ckblska6z000elktq2tpa45cn" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Spark学习笔记/20. Spark Take函数" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/20.%20Spark%20Take%E5%87%BD%E6%95%B0/" class="article-date">
-  <time datetime="2020-06-19T05:47:22.474Z" itemprop="datePublished">2020-06-19</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/20.%20Spark%20Take%E5%87%BD%E6%95%B0/">Spark学习笔记/20. Spark Take函数</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="20-Spark-Take函数"><a href="#20-Spark-Take函数" class="headerlink" title="20. Spark Take函数"></a>20. Spark Take函数</h1><p>在Spark中，<code>take</code>函数的行为类似于数组。它接收一个整数值（比如n）作为参数，并返回数据集的前<code>n</code>个元素的数组。</p>
-<h4 id="Take函数示例"><a href="#Take函数示例" class="headerlink" title="Take函数示例"></a>Take函数示例</h4><p>使用并行化集合创建RDD：</p>
-<blockquote>
-<p>scala&gt; val data = sc.parallelize(List(10, 20, 30, 40, 50))</p>
-</blockquote>
-<p>读取生成的结果：</p>
-<blockquote>
-<p>scala&gt; data.collect()</p>
-</blockquote>
-<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612113155.png" alt="image-20200612113155754"></p>
-<p>应用<code>take()</code>函数来检索数据集的第一个元素（类似first()函数）和前三个元素：</p>
-<blockquote>
-<p>scala&gt; val takefunc = data.take(1)</p>
-<p>scala&gt; val takefunc = data.take(3)</p>
-</blockquote>
-<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612113432.png" alt="image-20200612113432394"></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/20.%20Spark%20Take%E5%87%BD%E6%95%B0/" data-id="ckblska6x000blktq3u4q7vr1" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 
   <nav id="page-nav">
@@ -820,23 +1066,23 @@
       <ul>
         
           <li>
-            <a href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/9.%20Spark%20Filter%E5%87%BD%E6%95%B0/">Spark学习笔记/9. Spark Filter函数</a>
+            <a href="/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/7.%20Hadoop%20MapReduce/">Hadoop学习笔记/7. Hadoop MapReduce</a>
           </li>
         
           <li>
-            <a href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/8.%20Spark%20Map%E5%87%BD%E6%95%B0/">Spark学习笔记/8. Spark Map函数</a>
+            <a href="/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/6.%20Hadoop%E5%91%BD%E4%BB%A4%E5%8F%82%E8%80%83/">Hadoop学习笔记/6. Hadoop命令参考</a>
           </li>
         
           <li>
-            <a href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/7.%20RDD%E5%85%B1%E4%BA%AB%E5%8F%98%E9%87%8F/">Spark学习笔记/7. RDD共享变量</a>
+            <a href="/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/5.%20Hadoop%20HDFS%E6%93%8D%E4%BD%9C/">Hadoop学习笔记/5. Hadoop HDFS操作</a>
           </li>
         
           <li>
-            <a href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/6.%20RDD%E6%8C%81%E4%B9%85%E5%8C%96/">Spark学习笔记/6. RDD持久化</a>
+            <a href="/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/4.%20Hadoop%20HDFS/">Hadoop学习笔记/4. Hadoop HDFS</a>
           </li>
         
           <li>
-            <a href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/5.RDD%E6%93%8D%E4%BD%9C/">Spark学习笔记/5.RDD操作</a>
+            <a href="/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/3.%20Hadoop%E6%98%AF%E4%BB%80%E4%B9%88/">Hadoop学习笔记/3. Hadoop是什么</a>
           </li>
         
       </ul>

@@ -64,6 +64,437 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Spark学习笔记/17. Spark reduceByKey函数" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/17.%20Spark%20reduceByKey%E5%87%BD%E6%95%B0/" class="article-date">
+  <time datetime="2020-06-19T05:47:22.193Z" itemprop="datePublished">2020-06-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/17.%20Spark%20reduceByKey%E5%87%BD%E6%95%B0/">Spark学习笔记/17. Spark reduceByKey函数</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="17-Spark-reduceByKey函数"><a href="#17-Spark-reduceByKey函数" class="headerlink" title="17. Spark reduceByKey函数"></a>17. Spark reduceByKey函数</h1><p>在spark中，<code>reduceByKey</code>函数是一种常用的转换操作，它执行数据聚合（聚合的规则自己定义）。</p>
+<p>它接收键值对(K, V)作为输入，基于键聚合值并生成(K, V）对的数据集作为输出。</p>
+<h4 id="reduceByKey函数示例"><a href="#reduceByKey函数示例" class="headerlink" title="reduceByKey函数示例"></a>reduceByKey函数示例</h4><p>在此示例中，我们基于键聚合值.</p>
+<p>使用并行化集合创建RDD：</p>
+<blockquote>
+<p>scala&gt; val data = sc.parallelize(Array((“C”, 3), (“A”, 1), (“B”, 4), (“A”, 2), (“B”, 5)))</p>
+</blockquote>
+<p>读取生成的结果：</p>
+<blockquote>
+<p>scala&gt; data.collect</p>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612111753.png" alt="image-20200612105256248"></p>
+<p>应用<code>reduceByKey()</code>函数来聚合值。</p>
+<blockquote>
+<p>scala&gt; val reducefunc = data.reduceByKey((value, x) =&gt; (value + x))</p>
+</blockquote>
+<p>读取生成的结果：</p>
+<blockquote>
+<p>scala&gt; reducefunc.collect</p>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612111805.png" alt="image-20200612105529453"></p>
+<p>这里聚合的规则是把键相同的值都加起来，返回结果是键值对，每个键的值是原来数据集中这个键的所有值的总和。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/17.%20Spark%20reduceByKey%E5%87%BD%E6%95%B0/" data-id="ckblska6v0009lktqhufba2f2" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Spark学习笔记/16. Spark groupByKey函数" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/16.%20Spark%20groupByKey%E5%87%BD%E6%95%B0/" class="article-date">
+  <time datetime="2020-06-19T05:47:22.107Z" itemprop="datePublished">2020-06-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/16.%20Spark%20groupByKey%E5%87%BD%E6%95%B0/">Spark学习笔记/16. Spark groupByKey函数</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="16-Spark-groupByKey函数"><a href="#16-Spark-groupByKey函数" class="headerlink" title="16. Spark groupByKey函数"></a>16. Spark groupByKey函数</h1><p>在spark中，<code>groupByKey</code>函数是一种经常使用的转换操作，它执行数据的<strong>混乱</strong>。</p>
+<p>它接收键值对(K, V)作为输入，基于键值对进行分组，<strong><em>key相同的value被分到一组</em></strong>。并生成（K, Iterable）对的数据集作为输出。</p>
+<h4 id="groupByKey函数示例"><a href="#groupByKey函数示例" class="headerlink" title="groupByKey函数示例"></a>groupByKey函数示例</h4><p>使用并行化集合创建RDD：</p>
+<blockquote>
+<p>scala&gt; val data = sc.parallelize(Seq((“C”, 3), (“A”, 1), (“ B”, 4), (“A”, 2), (“B”, 5)))</p>
+</blockquote>
+<p>读取生成的结果：</p>
+<blockquote>
+<p>scala&gt; data.collect</p>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612104346.png" alt="image-20200612104346925"></p>
+<p>应用<code>groupByKey()</code>函数对键值对进行分组：</p>
+<blockquote>
+<p>scala&gt; val groupfunc = data.groupByKey()</p>
+</blockquote>
+<p>读取生成的结果：</p>
+<blockquote>
+<p>scala&gt; groupfunc.collect</p>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612104534.png" alt="image-20200612104534462"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/16.%20Spark%20groupByKey%E5%87%BD%E6%95%B0/" data-id="ckblska6t0006lktqez4v7gg9" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Spark学习笔记/15. Spark sortByKey函数" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/15.%20Spark%20sortByKey%E5%87%BD%E6%95%B0/" class="article-date">
+  <time datetime="2020-06-19T05:47:22.037Z" itemprop="datePublished">2020-06-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/15.%20Spark%20sortByKey%E5%87%BD%E6%95%B0/">Spark学习笔记/15. Spark sortByKey函数</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="15-Spark-sortByKey函数"><a href="#15-Spark-sortByKey函数" class="headerlink" title="15. Spark sortByKey函数"></a>15. Spark sortByKey函数</h1><p>在Spark中，<code>sortByKey</code>函数维护元素的顺序。它接收键值对<code>(K, V)</code>作为输入，按升序或降序对元素进行排序，并按顺序生成数据集。</p>
+<h4 id="sortByKey函数示例"><a href="#sortByKey函数示例" class="headerlink" title="sortByKey函数示例"></a>sortByKey函数示例</h4><p>使用并行化集合创建RDD：</p>
+<blockquote>
+<p>scala&gt; val data = sc.parallelize(Seq((“C”, 3), (“A”, 1), (“D”, 4), (“B”, 2), (“E”, 5)))</p>
+</blockquote>
+<p>读取生成的结果：</p>
+<blockquote>
+<p>scala&gt; data.collect</p>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612103346.png" alt="image-20200612103346422"></p>
+<p>应用<code>sortByKey()</code>函数来对数据集进行排序：</p>
+<blockquote>
+<p>scala&gt; val sortfunc = data.sortByKey()</p>
+</blockquote>
+<p>读取生成的结果：</p>
+<blockquote>
+<p>scala&gt; sortfunc.collect</p>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612103512.png" alt="image-20200612103512106"></p>
+<p>返回结果按照K-V对的key进行排序，这里的key是字母，返回结果按照字典序升序排序。</p>
+<p>对于降序，应用<code>sortByKey()</code>函数并将布尔类型作为参数传递。</p>
+<blockquote>
+<p>scala&gt; val sortfunc = data.sortByKey(false)</p>
+</blockquote>
+<p>读取生成的结果:</p>
+<blockquote>
+<p>scala&gt; sortfunc.collect</p>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612103722.png" alt="image-20200612103722121"></p>
+<p>sortByKey函数传递一个<code>false</code>参数，最后的返回结果就是按照字典序降序。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/15.%20Spark%20sortByKey%E5%87%BD%E6%95%B0/" data-id="ckblska6u0007lktq2eyd8qmu" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Spark学习笔记/14. Spark Cartesian函数" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/14.%20Spark%20Cartesian%E5%87%BD%E6%95%B0/" class="article-date">
+  <time datetime="2020-06-19T05:47:21.939Z" itemprop="datePublished">2020-06-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/14.%20Spark%20Cartesian%E5%87%BD%E6%95%B0/">Spark学习笔记/14. Spark Cartesian函数</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="14-Spark-Cartesian函数"><a href="#14-Spark-Cartesian函数" class="headerlink" title="14. Spark Cartesian函数"></a>14. Spark Cartesian函数</h1><p>在Spark中，<code>cartesian</code>函数生成两个数据集的笛卡尔积，并返回所有可能的组合对。</p>
+<p>这里，一个数据集的每一个元素都与另一个数据集的每个元素配对。</p>
+<h4 id="Cartesian函数示例"><a href="#Cartesian函数示例" class="headerlink" title="Cartesian函数示例"></a>Cartesian函数示例</h4><p>在此示例中，生成两个数据的笛卡尔积。</p>
+<p>使用并行化集合创建RDD：</p>
+<blockquote>
+<p>scala&gt; val data1 = sc.parallelize(List(1, ,2, 3))</p>
+</blockquote>
+<p>读取生成的结果:</p>
+<blockquote>
+<p>scala&gt; data1.collect</p>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612101947.png" alt="image-20200612101947084"></p>
+<p>使用并行化集合创建另一个RDD：</p>
+<blockquote>
+<p>scala&gt; val data2 = sc.parallelize(List(3, 4, 5))</p>
+</blockquote>
+<p>读取生成的结果：</p>
+<blockquote>
+<p>scala&gt; data2.collect</p>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612102109.png" alt="image-20200612102109091"></p>
+<p>应用<code>cartesian()</code>函数返回两个数据集的笛卡尔积:</p>
+<blockquote>
+<p>scala&gt; val cartesianfunc = data1.cartesian(data2)</p>
+</blockquote>
+<p>读取生成的结果：</p>
+<blockquote>
+<p>scala&gt; cartesianfunc.collect</p>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612102315.png" alt="image-20200612102315863"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/14.%20Spark%20Cartesian%E5%87%BD%E6%95%B0/" data-id="ckblska6r0003lktqaoe2gmww" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Spark学习笔记/13. Spark Intersection函数" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/13.%20Spark%20Intersection%E5%87%BD%E6%95%B0/" class="article-date">
+  <time datetime="2020-06-19T05:47:21.810Z" itemprop="datePublished">2020-06-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/13.%20Spark%20Intersection%E5%87%BD%E6%95%B0/">Spark学习笔记/13. Spark Intersection函数</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="13-Spark-Intersection函数"><a href="#13-Spark-Intersection函数" class="headerlink" title="13. Spark Intersection函数"></a>13. Spark Intersection函数</h1><p>在Spark中，<code>Intersection</code>函数返回一个新数据集，其中包含不同数据集中存在的元素的<strong><em>交集</em></strong>。因此它只返回一行。此函数的行为与SQL中的<code>INTERSECT</code>查询类似。</p>
+<h4 id="Intersection函数示例"><a href="#Intersection函数示例" class="headerlink" title="Intersection函数示例"></a>Intersection函数示例</h4><p>使用并行化集合创建RDD：</p>
+<blockquote>
+<p>scala&gt; val data1 = sc.parallelzie(List(1, 2 , 3))</p>
+</blockquote>
+<p>读取生成的结果:</p>
+<blockquote>
+<p>scala&gt; data1.collect</p>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612100650.png" alt="image-20200612100650624"></p>
+<p>使用并行化集合创建另一个RDD：</p>
+<blockquote>
+<p>scala&gt; val data2 = sc.parallelize(List(3, 4, 5))</p>
+</blockquote>
+<p>读取生成的结果：</p>
+<blockquote>
+<p>scala&gt; data2.collect</p>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612100804.png" alt="image-20200612100804900"></p>
+<p>应用<code>intersection()</code>函数返回两个数据集的交集:</p>
+<blockquote>
+<p>scala&gt; val intersectfunc = data1.intersection(data2)</p>
+</blockquote>
+<p>读取生成的结果:</p>
+<blockquote>
+<p>scala&gt; intersectfunc.collect</p>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612100934.png" alt="image-20200612100933990"></p>
+<p>返回结果是两个集合的交集: 3</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/13.%20Spark%20Intersection%E5%87%BD%E6%95%B0/" data-id="ckblska6s0005lktqeta06nj0" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Spark学习笔记/12. Spark Union函数" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/12.%20Spark%20Union%E5%87%BD%E6%95%B0/" class="article-date">
+  <time datetime="2020-06-19T05:47:21.505Z" itemprop="datePublished">2020-06-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/12.%20Spark%20Union%E5%87%BD%E6%95%B0/">Spark学习笔记/12. Spark Union函数</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="12-Spark-Union函数"><a href="#12-Spark-Union函数" class="headerlink" title="12. Spark Union函数"></a>12. Spark Union函数</h1><p>在Spark中，<code>Union</code>函数返回一个新数据集，其中包含不同数据集中存在的元素组合（也就是说返回两个数据集的并集）。</p>
+<h4 id="Union函数示例"><a href="#Union函数示例" class="headerlink" title="Union函数示例"></a>Union函数示例</h4><p>在此示例中，组合了两个元素的数据集。</p>
+<p>使用并行化集合创建集合RDD：</p>
+<blockquote>
+<p>scala&gt; val data1 = sc.parallelize(List(1, 2))</p>
+</blockquote>
+<p>读取生成的结果：</p>
+<blockquote>
+<p>scala&gt; data1.collect</p>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612095401.png" alt="image-20200612095229224"></p>
+<p>使用并行化集合创建另一个RDD：</p>
+<blockquote>
+<p>scala&gt; val data2 = sc.parallelize(List(3, 4, 5))</p>
+</blockquote>
+<p>读取生成的结果：</p>
+<blockquote>
+<p>scala&gt; data2.collect</p>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612095351.png" alt="image-20200612095351250"></p>
+<p>应用<code>union()</code>函数返回元素的并集:</p>
+<blockquote>
+<p>scala&gt; val unionfunc = data1.union(data2)</p>
+</blockquote>
+<p>读取生成的结果：</p>
+<blockquote>
+<p>scala&gt; unionfunc.collect</p>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612095525.png" alt="image-20200612095525301"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/12.%20Spark%20Union%E5%87%BD%E6%95%B0/" data-id="ckblska6s0004lktqhxie8xeg" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Spark学习笔记/11. Spark Distinct函数" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/11.%20Spark%20Distinct%E5%87%BD%E6%95%B0/" class="article-date">
+  <time datetime="2020-06-19T05:47:21.432Z" itemprop="datePublished">2020-06-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/11.%20Spark%20Distinct%E5%87%BD%E6%95%B0/">Spark学习笔记/11. Spark Distinct函数</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="11-Spark-Distinct函数"><a href="#11-Spark-Distinct函数" class="headerlink" title="11. Spark Distinct函数"></a>11. Spark Distinct函数</h1><p>在Spark中，<code>Distinct</code>函数返回提供的数据集中的不同元素（相当于数据集全都放入一个set，再返回set中的所有元素）。</p>
+<h4 id="Distinct函数的示例"><a href="#Distinct函数的示例" class="headerlink" title="Distinct函数的示例"></a>Distinct函数的示例</h4><p>使用并行化集合创建RDD：</p>
+<blockquote>
+<p>scala&gt; val data = sc.parallelize(List(10, 20, 20, 40))</p>
+</blockquote>
+<p>读取生成的结果：</p>
+<blockquote>
+<p>scala&gt; data.collect</p>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612095546.png" alt="image-20200612094720307"></p>
+<p>使用<code>distinct()</code>函数来忽略重复的元素：</p>
+<blockquote>
+<p>scala&gt; val distinctfunc = data.distinct()</p>
+</blockquote>
+<p>读取生成的结果：</p>
+<blockquote>
+<p>scala&gt; distinctfunc.collect</p>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200612095554.png" alt="image-20200612094841086"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/11.%20Spark%20Distinct%E5%87%BD%E6%95%B0/" data-id="ckblska6q0002lktqb3y3g013" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-Spark学习笔记/10. Spark Count函数" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/10.%20Spark%20Count%E5%87%BD%E6%95%B0/" class="article-date">
@@ -253,23 +684,23 @@
       <ul>
         
           <li>
-            <a href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/9.%20Spark%20Filter%E5%87%BD%E6%95%B0/">Spark学习笔记/9. Spark Filter函数</a>
+            <a href="/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/7.%20Hadoop%20MapReduce/">Hadoop学习笔记/7. Hadoop MapReduce</a>
           </li>
         
           <li>
-            <a href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/8.%20Spark%20Map%E5%87%BD%E6%95%B0/">Spark学习笔记/8. Spark Map函数</a>
+            <a href="/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/6.%20Hadoop%E5%91%BD%E4%BB%A4%E5%8F%82%E8%80%83/">Hadoop学习笔记/6. Hadoop命令参考</a>
           </li>
         
           <li>
-            <a href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/7.%20RDD%E5%85%B1%E4%BA%AB%E5%8F%98%E9%87%8F/">Spark学习笔记/7. RDD共享变量</a>
+            <a href="/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/5.%20Hadoop%20HDFS%E6%93%8D%E4%BD%9C/">Hadoop学习笔记/5. Hadoop HDFS操作</a>
           </li>
         
           <li>
-            <a href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/6.%20RDD%E6%8C%81%E4%B9%85%E5%8C%96/">Spark学习笔记/6. RDD持久化</a>
+            <a href="/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/4.%20Hadoop%20HDFS/">Hadoop学习笔记/4. Hadoop HDFS</a>
           </li>
         
           <li>
-            <a href="/2020/06/19/Spark%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/5.RDD%E6%93%8D%E4%BD%9C/">Spark学习笔记/5.RDD操作</a>
+            <a href="/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/3.%20Hadoop%E6%98%AF%E4%BB%80%E4%B9%88/">Hadoop学习笔记/3. Hadoop是什么</a>
           </li>
         
       </ul>

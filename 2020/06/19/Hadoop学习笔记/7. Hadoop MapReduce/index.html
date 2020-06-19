@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Hadoop学习笔记/7. Hadoop MapReduce | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="7. Hadoop MapReduceMapReduce是一个可以在普通硬件的大集群上编写应用程序以并行、可靠的方式处理海量数据的框架。 MapReduce是什么？MapReduce是一种处理技术和程序模型的基于Java的分布式计算框架。 MapReduce算法包含了两项重要任务，即Map和Reduce。 Map采用了一组数据并将其转换成另一组数据，其中各个元件被分解成元祖（键&#x2F;值对）。其次，减少">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hadoop学习笔记&#x2F;7. Hadoop MapReduce">
+<meta property="og:url" content="http://yoursite.com/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/7.%20Hadoop%20MapReduce/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="7. Hadoop MapReduceMapReduce是一个可以在普通硬件的大集群上编写应用程序以并行、可靠的方式处理海量数据的框架。 MapReduce是什么？MapReduce是一种处理技术和程序模型的基于Java的分布式计算框架。 MapReduce算法包含了两项重要任务，即Map和Reduce。 Map采用了一组数据并将其转换成另一组数据，其中各个元件被分解成元祖（键&#x2F;值对）。其次，减少">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200615153527.png">
+<meta property="article:published_time" content="2020-06-19T05:50:36.545Z">
+<meta property="article:modified_time" content="2020-06-15T07:36:09.824Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200615153527.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Hadoop学习笔记/7. Hadoop MapReduce" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/7.%20Hadoop%20MapReduce/" class="article-date">
+  <time datetime="2020-06-19T05:50:36.545Z" itemprop="datePublished">2020-06-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Hadoop学习笔记/7. Hadoop MapReduce
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="7-Hadoop-MapReduce"><a href="#7-Hadoop-MapReduce" class="headerlink" title="7. Hadoop MapReduce"></a>7. Hadoop MapReduce</h1><p>MapReduce是一个可以在普通硬件的大集群上编写应用程序以并行、可靠的方式处理海量数据的框架。</p>
+<h4 id="MapReduce是什么？"><a href="#MapReduce是什么？" class="headerlink" title="MapReduce是什么？"></a>MapReduce是什么？</h4><p>MapReduce是一种处理技术和程序模型的基于Java的分布式计算框架。</p>
+<p>MapReduce算法包含了两项重要任务，即Map和Reduce。</p>
+<p>Map采用了一组数据并将其转换成另一组数据，其中各个元件被分解成元祖（键/值对）。其次，减少任务，这需要从Map作为输入并组合那些数据元组成的一组小的元祖输出。</p>
+<p>在Map作业之后执行reduce任务。</p>
+<p>MapReduce的主要优点是，它很容易在多个计算节点处理大规模数据。下面的MapReduce模型中数据处理的原语被称为映射器和减速器。分解数据处理应用到映射器和减速器没什么大不了的，但要编写MapReduce形式的应用，扩展应用程序运行在几百，几千甚至几万集群中而仅仅通过一个配置的更改这种简单的可扩展性才是吸引众多程序员使用MR模型的原因。</p>
+<h4 id="算法"><a href="#算法" class="headerlink" title="算法"></a>算法</h4><p>通常MapReduce范例是基于发送数据的计算机的位置。</p>
+<p>MapReduce计划分三个阶段执行，即映射阶段(map), shuffle阶段，减少阶段(reduce)。</p>
+<ul>
+<li>映射阶段：映射或映射器的工作是处理输入数据。一般输入数据是文件或目录的形式，并且被存储在Hadoop的文件系统（HDFS）。输入文件被传递到有限的映射器，映射器处理该数据，并创建数据的若干小块。</li>
+<li>减少阶段：这个阶段是Shuffle阶段和Reduce阶段的组合。减速器的工作是处理来自映射器中的数据。处理之后，它产生一组新的输出，存储在HDFS。</li>
+</ul>
+<p>在一个MapReduce工作中，Hadoop发送Map和Reduce任务到集群的相应服务器。</p>
+<p>框架管理数据传递，例如发出任务的所有节点之间的集群周围的详细信息，验证任务完成和复制数据。</p>
+<p>大部分的计算发生在本地磁盘上，可以减少网络通信量。</p>
+<p>给定任务完成后，将收集集群并减少数据，以形成一个合适的结果，并且将其发送回Hadoop服务器。</p>
+<p><img src="https://raw.githubusercontent.com/MachineGunLin/markdown_pics/master/img/20200615153527.png" alt="image-20200615141043783"></p>
+<h4 id="输入和输出（Java透视图）"><a href="#输入和输出（Java透视图）" class="headerlink" title="输入和输出（Java透视图）"></a>输入和输出（Java透视图）</h4><p>MapReduce框架上对&lt;key, value&gt;对进行操作，也就是说框架视图中输入需要一组&lt;key, value&lt;对，并产生一组&lt;key, value&gt;对作为作业的输出。</p>
+<p>需要实现接口。键类必须实现可写，可比（较）接口，以方便框架排序。</p>
+<p>MapReduce工作的输入和输出类型：</p>
+<p>（输入）&lt;k1, v1&gt; -&gt; 映射 -&gt; &lt;k2, v2&gt; -&gt; reduce -&gt; &lt;k3, v3&gt;（输出）</p>
+<table>
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center">输入</th>
+<th align="center">输出</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Map</td>
+<td align="center">&lt;k1, v1&gt;</td>
+<td align="center">list(&lt;k2, v2&gt;)</td>
+</tr>
+<tr>
+<td align="center">Reduce</td>
+<td align="center">&lt;k2, list(v2)&gt;</td>
+<td align="center">list(&lt;k3, v3&gt;)</td>
+</tr>
+</tbody></table>
+<h4 id="术语"><a href="#术语" class="headerlink" title="术语"></a>术语</h4><ul>
+<li>PayLoad：应用程序实现映射和减少功能，形成工作的核心。</li>
+<li>Mapper：映射器的输入键/值对映射到一组中间键/值对。</li>
+<li>NameNode：节点管理Hadoop分布式文件系统（HDFS）。</li>
+<li>DataNode：在任何处理发生之前呈现节点数据。</li>
+<li>MasterNode：节点所在JobTracker运行并接受来自客户端作业请求。</li>
+<li>SlaveNode：节点所在Map和Reduce程序运行在slave节点。</li>
+<li>JobTracker：调度作业并跟踪作业分配给任务跟踪器。</li>
+<li>Task Tracker：跟踪任务和报告状态的JobTracker。</li>
+<li>Job：程序在整个数据集映射和减速的执行。</li>
+<li>Task：一个映射程序的执行或对数据的一个片段的减速器。</li>
+<li>Task Attempt：一种特定实例在SlaveNode执行任务的尝试。</li>
+</ul>
+<h4 id="重要命令"><a href="#重要命令" class="headerlink" title="重要命令"></a>重要命令</h4><p>所有的Hadoop命令都是由$HADOOP_HOME/bin/hadoop命令调用。</p>
+<p>Usage: hadoop [–config confdir] COMMAND</p>
+<p>下面列出了可用的选项以及说明。</p>
+<table>
+<thead>
+<tr>
+<th align="center">操作</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">namenode -format</td>
+<td align="center">格式化DFS文件系统。</td>
+</tr>
+<tr>
+<td align="center">secondarynamenode</td>
+<td align="center">运行DFS二次名称文件。</td>
+</tr>
+<tr>
+<td align="center">namenode</td>
+<td align="center">运行DFS名称节点。</td>
+</tr>
+<tr>
+<td align="center">datanode</td>
+<td align="center">运行DFS的Datanode。</td>
+</tr>
+<tr>
+<td align="center">dfsadmin</td>
+<td align="center">运行DFS管理客户端。</td>
+</tr>
+<tr>
+<td align="center">mradmin</td>
+<td align="center">运行映射，减少管理客户端。</td>
+</tr>
+<tr>
+<td align="center">fsck</td>
+<td align="center">运行DFS文件系统检查工具。</td>
+</tr>
+<tr>
+<td align="center">fs</td>
+<td align="center">运行一个通用的文件系统的用户客户端。</td>
+</tr>
+<tr>
+<td align="center">balancer</td>
+<td align="center">运行集群平衡工具。</td>
+</tr>
+<tr>
+<td align="center">oiv</td>
+<td align="center">适用于离线Fslmage查看器的fsimage。</td>
+</tr>
+<tr>
+<td align="center">fetchdt</td>
+<td align="center">从NameNode获取团令牌。</td>
+</tr>
+<tr>
+<td align="center">jobtracker</td>
+<td align="center">运行MapReduce工作跟踪节点。</td>
+</tr>
+<tr>
+<td align="center">pipes</td>
+<td align="center">运行管道的工作。</td>
+</tr>
+<tr>
+<td align="center">tasktracker</td>
+<td align="center">运行MapReduce任务跟踪节点。</td>
+</tr>
+<tr>
+<td align="center">historyserver</td>
+<td align="center">运行作业历史记录服务器作为一个独立的守护进程。</td>
+</tr>
+<tr>
+<td align="center">job</td>
+<td align="center">操纵MapReduce工作。</td>
+</tr>
+<tr>
+<td align="center">queue</td>
+<td align="center">获取有关作业队列信息。</td>
+</tr>
+<tr>
+<td align="center">version</td>
+<td align="center">打印版本。</td>
+</tr>
+<tr>
+<td align="center">jar <jar></td>
+<td align="center">运行一个jar文件。</td>
+</tr>
+<tr>
+<td align="center">distcp <srcurl> <desturl></td>
+<td align="center">递归复制文件或目录。</td>
+</tr>
+<tr>
+<td align="center">archive -archiveName NAME -p</td>
+<td align="center">创建一个Hadoop的归档。</td>
+</tr>
+<tr>
+<td align="center">classpath</td>
+<td align="center">打印需要得到Hadoop jar和所需要的库的类路径。</td>
+</tr>
+<tr>
+<td align="center">daemonlog</td>
+<td align="center">为每个守护进程获取/设置日志级别。</td>
+</tr>
+</tbody></table>
+<h4 id="如何与MapReduce工作互动"><a href="#如何与MapReduce工作互动" class="headerlink" title="如何与MapReduce工作互动"></a>如何与MapReduce工作互动</h4><p>Usage： hadoop job [GENERIC_OPTIONS]</p>
+<p>一下是在一个Hadoop的作业的可用通用选项。</p>
+<table>
+<thead>
+<tr>
+<th align="center">GENERIC_OPTIONS</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">-submit <job-file></td>
+<td align="center">提交作业。</td>
+</tr>
+<tr>
+<td align="center">status <job-id></td>
+<td align="center">打印映射，并减少完成的百分比以及所有的工作的计数器。</td>
+</tr>
+<tr>
+<td align="center">counter <job-id>  <group-name> <countername></td>
+<td align="center">打印的计数器值。</td>
+</tr>
+<tr>
+<td align="center">-events <job-id> &lt;fromevent-#&gt; &lt;#-of-events&gt;</td>
+<td align="center">打印接收到JobTracker为给定范围内的事件的详细信息。</td>
+</tr>
+<tr>
+<td align="center">-history [all] <jobOutputDir></td>
+<td align="center">打印作业的详细信息，作业未能终止时提供详细的信息。有关作业的更多详细信息，如每个成功的任务，可以尝试通过制定[all]选项查看。</td>
+</tr>
+<tr>
+<td align="center">-list[all]</td>
+<td align="center">显示所有作业。-list只显示尚未完成的作业。</td>
+</tr>
+<tr>
+<td align="center">-kill-task <task-id></td>
+<td align="center">终止任务。终止任务不计入失败的尝试。</td>
+</tr>
+<tr>
+<td align="center">-fail-task <task-id></td>
+<td align="center">失败的任务。</td>
+</tr>
+<tr>
+<td align="center">set-priority <job-id> <priority></td>
+<td align="center">更改作业的优先级。允许设置的优先级有：VERY_HIGH, HIGH, NORMAL, LOW, VERY_LOW</td>
+</tr>
+</tbody></table>
+<h5 id="查看作业的状态"><a href="#查看作业的状态" class="headerlink" title="查看作业的状态"></a>查看作业的状态</h5><blockquote>
+<p>$ $HADOOP_HOME/bin/hadoop job -status <job-id></p>
+<p>$ $HADOOP_HOME/bin/hadoop job -status job_20200615666_0001</p>
+</blockquote>
+<h5 id="在output-dir查看作业历史"><a href="#在output-dir查看作业历史" class="headerlink" title="在output-dir查看作业历史"></a>在output-dir查看作业历史</h5><blockquote>
+<p>$ $HADOOP_HOME/bin/hadoop job -history <dir-name></p>
+<p>$ $HADOOP_HOME/bin/hadoop job -history /user/expert/output</p>
+</blockquote>
+<h5 id="终止任务"><a href="#终止任务" class="headerlink" title="终止任务"></a>终止任务</h5><blockquote>
+<p>$ $HADOOP_HOME/bin/hadoop job -kill <job-id></p>
+<p>$ $HADOOP_HOME/bin/hadoop job -kill job_20200615666_0001</p>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/7.%20Hadoop%20MapReduce/" data-id="ckblsod4r0006m4tqftcfgixo" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/6.%20Hadoop%E5%91%BD%E4%BB%A4%E5%8F%82%E8%80%83/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Hadoop学习笔记/6. Hadoop命令参考</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/7.%20Hadoop%20MapReduce/">Hadoop学习笔记/7. Hadoop MapReduce</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/6.%20Hadoop%E5%91%BD%E4%BB%A4%E5%8F%82%E8%80%83/">Hadoop学习笔记/6. Hadoop命令参考</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/5.%20Hadoop%20HDFS%E6%93%8D%E4%BD%9C/">Hadoop学习笔记/5. Hadoop HDFS操作</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/4.%20Hadoop%20HDFS/">Hadoop学习笔记/4. Hadoop HDFS</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/3.%20Hadoop%E6%98%AF%E4%BB%80%E4%B9%88/">Hadoop学习笔记/3. Hadoop是什么</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

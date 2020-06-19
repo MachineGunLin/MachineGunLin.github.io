@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Hadoop学习笔记/6. Hadoop命令参考 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="6. Hadoop命令参考在$HADOOP_HOME&#x2F;bin&#x2F;hadoop fs里有很多命令。 $HADOOP_HOME&#x2F;bin&#x2F;hadoop fs -help命令会显示一个简短的用法。 使用参数的一般方式如下： 12345&quot;&lt;path&gt;&quot; 是文件或目录名称。&quot;&lt;path&gt;...&quot;是一个或者多个文件或目录名称。&quot;&lt;fi">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hadoop学习笔记&#x2F;6. Hadoop命令参考">
+<meta property="og:url" content="http://yoursite.com/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/6.%20Hadoop%E5%91%BD%E4%BB%A4%E5%8F%82%E8%80%83/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="6. Hadoop命令参考在$HADOOP_HOME&#x2F;bin&#x2F;hadoop fs里有很多命令。 $HADOOP_HOME&#x2F;bin&#x2F;hadoop fs -help命令会显示一个简短的用法。 使用参数的一般方式如下： 12345&quot;&lt;path&gt;&quot; 是文件或目录名称。&quot;&lt;path&gt;...&quot;是一个或者多个文件或目录名称。&quot;&lt;fi">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-06-19T05:50:36.540Z">
+<meta property="article:modified_time" content="2020-06-15T05:42:24.854Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Hadoop学习笔记/6. Hadoop命令参考" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/6.%20Hadoop%E5%91%BD%E4%BB%A4%E5%8F%82%E8%80%83/" class="article-date">
+  <time datetime="2020-06-19T05:50:36.540Z" itemprop="datePublished">2020-06-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Hadoop学习笔记/6. Hadoop命令参考
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="6-Hadoop命令参考"><a href="#6-Hadoop命令参考" class="headerlink" title="6. Hadoop命令参考"></a>6. Hadoop命令参考</h1><p>在<code>$HADOOP_HOME/bin/hadoop fs</code>里有很多命令。</p>
+<p>$HADOOP_HOME/bin/hadoop fs -help命令会显示一个简短的用法。</p>
+<p>使用参数的一般方式如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&quot;&lt;path&gt;&quot; 是文件或目录名称。</span><br><span class="line">&quot;&lt;path&gt;...&quot;是一个或者多个文件或目录名称。</span><br><span class="line">&quot;&lt;file&gt;&quot;指文件名字。</span><br><span class="line">&quot;&lt;src&gt;&quot;和&quot;&lt;dest&gt;&quot;是一个有向的操作的路径。</span><br><span class="line">&quot;&lt;localSrc&gt;&quot;和&quot;&lt;localDest&gt;&quot;是本地文件系统中一个有向操作的路径。</span><br></pre></td></tr></table></figure>
+
+<p>所有其他文件和路径名是指HDFS内部的对象。</p>
+<table>
+<thead>
+<tr>
+<th>1.</th>
+<th>ls <path> ：列出路径指定的目录中的内容，显示出名称，权限，拥有者，大小和修改日期等条目。</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>2.</td>
+<td><strong>lsr <path></strong>：行为类似于 -ls，但递归显示路径的所有子目录项。</td>
+</tr>
+<tr>
+<td>3.</td>
+<td><strong>du <path></strong>：显示磁盘使用率，以字节为单位，对所有的文件，这些文件匹配的路径，文件名报告使用完整HDFS协议前缀。</td>
+</tr>
+<tr>
+<td>4.</td>
+<td><strong>dus <path></strong>：类似-du，但打印路径中的所有文件/目录的磁盘使用情况的摘要。</td>
+</tr>
+<tr>
+<td>5.</td>
+<td><strong>mv <src> <dest></strong>：在HDFS的文件或目录里移动src到dest。</td>
+</tr>
+<tr>
+<td>6.</td>
+<td><strong>cp <src> <dest></strong>： 在HDFS里复制src中的文件或目录到dest。</td>
+</tr>
+<tr>
+<td>7.</td>
+<td><strong>rm <path></strong>： 删除文件或路径标识的空目录。</td>
+</tr>
+<tr>
+<td>8.</td>
+<td><strong>rmr <path></strong>：删除路径标识的文件或目录。递归删除所有子条目（例如，文件或路径的子目录）。</td>
+</tr>
+<tr>
+<td>9.</td>
+<td><strong>put <localSrc> <dest></strong>：从本地localSrc文件系统中的DFS标识文件或目录内复制到dest。</td>
+</tr>
+<tr>
+<td>10.</td>
+<td><strong>copyFromLocal <localSrc> <dest></strong>：等同于-put</td>
+</tr>
+<tr>
+<td>11.</td>
+<td><strong>moveFromLocal <localSrc>  <dest></strong>：从标识localSrc本地文件系统中的文件或目录中HDFS复制到dest，然后删除本地副本。</td>
+</tr>
+<tr>
+<td>12.</td>
+<td><strong>get [-crc] <src> <localDest></strong>：拷贝标识sr到localDest本地文件系统路径HDFS文件或目录。</td>
+</tr>
+<tr>
+<td>13.</td>
+<td><strong>getmerge <src> <localDest></strong>：检索匹配的路径的src HDFS中的所有文件，并将它们复制合并文件到标识localDest本地文件系统中。</td>
+</tr>
+<tr>
+<td>14.</td>
+<td><strong>cat <file-name></strong>：显示在标准输出文件名中的内容。</td>
+</tr>
+<tr>
+<td>15.</td>
+<td><strong>copyToLocal <src> <localDest></strong>：等同于-get</td>
+</tr>
+<tr>
+<td>16.</td>
+<td><strong>moveToLocal <src> <localDest></strong>：工作方式类似于-get，但删除HDFS复制成功。</td>
+</tr>
+<tr>
+<td>17.</td>
+<td><strong>mkdir <path></strong>：创建一个HDFS命名的目录路径。</td>
+</tr>
+<tr>
+<td>18.</td>
+<td><strong>setrep [-R] [-w] rep <path></strong>：设置标识路径代表文件的目标文件复制因子。（实际的复制因子会向着随着时间的推移目标移动）。</td>
+</tr>
+<tr>
+<td>19.</td>
+<td><strong>touchz <path></strong>：在路径上创建包含当前时间作为时间戳的文件。如果文件已经存在于路径上就失败，除非文件大小为0。</td>
+</tr>
+<tr>
+<td>20.</td>
+<td><strong>test -[ezd] <path></strong>：如果路径存在且长度为0则返回1，如果是1个目录或其他返回0。</td>
+</tr>
+<tr>
+<td>21.</td>
+<td><strong>stat [format] <path></strong>：打印有关的路径信息。格式是接收块文件大小(%b), 文件名(%n)， 块大小(%o), 复制(%r)和修改日期(%y, %Y)的字符串。</td>
+</tr>
+<tr>
+<td>22.</td>
+<td><strong>tail [-f] <file2name></strong>: 显示在标准输出文件的最后1KB。</td>
+</tr>
+<tr>
+<td>23.</td>
+<td><strong>chmod [-R] mode,mode,… <path> …</strong> : 变化符合路径标识的一个或多个对象关联的文件权限，-R是递归执行变更，模式是3为八进制模式（和Linux一样）。</td>
+</tr>
+<tr>
+<td>24.</td>
+<td><strong>chown [-R] [owner] [:[group]] <path>…</strong> ：设置所属组标识路径的文件或目录…如果指定-R就是设置组递归。</td>
+</tr>
+<tr>
+<td>25.</td>
+<td><strong>chgrp [-R] group <path>…</strong> ：设置所属组标识路径的文件或目录，-R设置组递归。</td>
+</tr>
+<tr>
+<td>26.</td>
+<td><strong>help <cmd-name></strong> ：返回使用上面列出的命令之一的信息。</td>
+</tr>
+</tbody></table>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/6.%20Hadoop%E5%91%BD%E4%BB%A4%E5%8F%82%E8%80%83/" data-id="ckblsod4q0005m4tq3sl36g84" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/7.%20Hadoop%20MapReduce/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Hadoop学习笔记/7. Hadoop MapReduce
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/5.%20Hadoop%20HDFS%E6%93%8D%E4%BD%9C/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Hadoop学习笔记/5. Hadoop HDFS操作</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/7.%20Hadoop%20MapReduce/">Hadoop学习笔记/7. Hadoop MapReduce</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/6.%20Hadoop%E5%91%BD%E4%BB%A4%E5%8F%82%E8%80%83/">Hadoop学习笔记/6. Hadoop命令参考</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/5.%20Hadoop%20HDFS%E6%93%8D%E4%BD%9C/">Hadoop学习笔记/5. Hadoop HDFS操作</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/4.%20Hadoop%20HDFS/">Hadoop学习笔记/4. Hadoop HDFS</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/19/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/3.%20Hadoop%E6%98%AF%E4%BB%80%E4%B9%88/">Hadoop学习笔记/3. Hadoop是什么</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>
